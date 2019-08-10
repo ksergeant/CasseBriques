@@ -9,6 +9,8 @@ love.graphics.setDefaultFilter("nearest")
 -- Cette ligne permet de déboguer pas à pas dans ZeroBraneStudio
 if arg[#arg] == "-debug" then require("mobdebug").start() end
 
+local imgBackground = love.graphics.newImage("graphiques/game_background_1.png")
+
 -- variable GAME
 local monJeu = require("jeu")
 
@@ -65,15 +67,36 @@ function love.load()
   Demarre()
 
   sonPerteBalle = love.audio.newSource("sons/sfx_deathscream_human2.wav","static")
-  sonCollisonBrique = love.audio.newSource("sons/sfx_exp_short_hard6.wav","static")
+  sonCollisonBrique = love.audio.newSource("sons/sfx_sounds_impact5.wav","static")
   sonCollisonRaquette = love.audio.newSource("sons/DM-CGS-07.wav","static")
   bgm = love.audio.newSource("musiques/through_space.ogg", "stream")
-  
+  love.mouse.setVisible(false) -- cache la souris
+
 end
 
 -- Fonction UPDATE de Love2D
 function love.update(dt)
   love.audio.play(bgm)
+
+  
+  -- si la souris sort de l'écran elle est replacée
+  if love.mouse.getX() >= largeur-40 then
+      love.mouse.setX(largeur -40)
+  end
+
+  if love.mouse.getX() <= 40 then
+    love.mouse.setX(40)
+  end
+
+  if love.mouse.getY() >= hauteur-40 then
+    love.mouse.setY(hauteur -40)
+  end
+
+  if love.mouse.getY() <= 40 then
+    love.mouse.setY(40)
+  end
+
+
   maRaquette.x = love.mouse.getX()
   
   if maRaquette.x < maRaquette.largeur/2 then
@@ -148,6 +171,8 @@ end
 
 -- Fonction DRAW de Love2D
 function love.draw()
+
+  love.graphics.draw(imgBackground,0,0)
     local r,g,b
     local l,c
     local bx, by = 0,0

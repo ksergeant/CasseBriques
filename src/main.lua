@@ -1,18 +1,11 @@
-
 -- Cette ligne permet d'afficher des traces dans la console pendant l'éxécution
 io.stdout:setvbuf('no')
-
--- Empèche Love de filtrer les contours des images quand elles sont redimentionnées
--- Indispensable pour du pixel art
-love.graphics.setDefaultFilter("nearest")
 
 -- Cette ligne permet de déboguer pas à pas dans ZeroBraneStudio
 if arg[#arg] == "-debug" then require("mobdebug").start() end
 
-local imgBackground = love.graphics.newImage("graphiques/game_background_1.png")
-
 -- variable GAME
-local monJeu = require("jeu")
+local myGame = require("game")
 
 -- variable VIES
 local mesVies = require("vies")
@@ -53,15 +46,14 @@ end
 function love.load()
  -- love.window.setMode(1000,600,fullscreentype)
  -- love.window.setTitle("Magic Brick 1.0")
-  
+
+ myGame:Load()
   largeur = love.graphics.getWidth()
   hauteur = love.graphics.getHeight()
   
   maBrique.hauteur = 25
   maBrique.largeur = largeur / 15
   
-  print("Largeur : ",largeur)
-  print("Hauteur : ",hauteur)
   
   maRaquette.y = hauteur - (maRaquette.hauteur/2)
   Demarre()
@@ -76,9 +68,10 @@ end
 
 -- Fonction UPDATE de Love2D
 function love.update(dt)
+
+  myGame:Update()
   love.audio.play(bgm)
 
-  
   -- si la souris sort de l'écran elle est replacée
   if love.mouse.getX() >= largeur-40 then
       love.mouse.setX(largeur -40)
@@ -108,8 +101,8 @@ function love.update(dt)
   end
   
   if maBalle.colle == true then
-    maBalle.x = maRaquette.x
-    maBalle.y = maRaquette.y - maRaquette.hauteur/2 - maBalle.rayon
+    maBalle.x = maRaquette.x -10
+    maBalle.y = maRaquette.y 
   else
     maBalle.x = maBalle.x +(maBalle.vx*dt)
     maBalle.y = maBalle.y +(maBalle.vy*dt)
@@ -164,15 +157,13 @@ function love.update(dt)
     end
   end
     
-  
-  
-  
 end
 
 -- Fonction DRAW de Love2D
 function love.draw()
 
-  love.graphics.draw(imgBackground,0,0)
+  myGame:Draw()
+  
     local r,g,b
     local l,c
     local bx, by = 0,0
@@ -190,13 +181,11 @@ function love.draw()
       end
       
     -- Dessine la raquette
-    love.graphics.setColor(0, 0, 228,100)
-    love.graphics.rectangle("fill",maRaquette.x - (maRaquette.largeur/2), maRaquette.y - (maRaquette.hauteur/2) -10, maRaquette.largeur,     maRaquette.hauteur)
-    
+    love.graphics.draw(maRaquette.image, maRaquette.x - (maRaquette.largeur/2), maRaquette.y - (maRaquette.hauteur/2) -10, 0, 0.2, 0.2)
     -- Dessine la balle
-    love.graphics.setColor(255, 0, 0, 100)
-    love.graphics.circle("fill", maBalle.x, maBalle.y -10, maBalle.rayon)
-    love.graphics.setColor(255, 255, 255, 100)
+    love.graphics.draw(maBalle.image, maBalle.x, maBalle.y, 0, 0.2, 0.2)
+   -- love.graphics.circle("fill", maBalle.x, maBalle.y -10, maBalle.rayon)
+    
     love.graphics.print("Briques : "..compteurBriques, 0, hauteur/2)
     love.graphics.print("Vies : "..tostring(mesVies.valeur), 0, hauteur/2+30)
 

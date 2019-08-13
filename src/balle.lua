@@ -5,6 +5,6 @@ Balle.rayon = 10
 Balle.colle = false
 Balle.vx = 0
 Balle.vy = 0
-
+Balle.image = love.graphics.newImage("graphiques/Star/Balle.png")
 return Balle
 

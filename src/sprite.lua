@@ -16,6 +16,7 @@ function spriteModel:Create(pName, pTableauImages, pNombreFrames)
   sprite.frames = pNombreFrames
   sprite.images = {} 
   sprite.isAnimed = false
+  sprite.delete = false
   
     for i = 1, #pTableauImages do
 

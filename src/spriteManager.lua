@@ -53,6 +53,12 @@ function spriteManager:Update(dt)
       
         local s = spriteManager.list_sprites[i]
         
+        if s.delete == true then
+
+          table.remove(spriteManager.list_sprites, i)
+
+        end 
+
         if s.isAnimed == true then
             s.anime()
         end

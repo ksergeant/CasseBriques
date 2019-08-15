@@ -16,37 +16,18 @@ function love.load()
   sonCollisonBrique = love.audio.newSource("sons/sfx_sounds_impact5.wav","static")
   sonCollisonRaquette = love.audio.newSource("sons/DM-CGS-07.wav","static")
   bgm = love.audio.newSource("musiques/through_space.ogg", "stream")
-  love.mouse.setVisible(false) -- cache la souris
-
+  --love.mouse.setVisible(false) -- cache la souris
+ 
 end
 
 -- Fonction UPDATE de Love2D
 function love.update(dt)
 
-  myGame:Update()
-  love.audio.play(bgm)
+  myGame:Update(dt)
+  --love.audio.play(bgm)
 
   --[[
-  -- si la souris sort de l'écran elle est replacée
-  if love.mouse.getX() >= largeur-40 then
-      love.mouse.setX(largeur -40)
-  end
-
-  if love.mouse.getX() <= 40 then
-    love.mouse.setX(40)
-  end
-
-  if love.mouse.getY() >= hauteur-40 then
-    love.mouse.setY(hauteur -40)
-  end
-
-  if love.mouse.getY() <= 40 then
-    love.mouse.setY(40)
-  end
-    ]]--
-    
-  --[[
-  maRaquette.x = love.mouse.getX()
+  
   
   if maRaquette.x < maRaquette.largeur/2 then
      maRaquette.x = maRaquette.largeur/2
@@ -116,22 +97,22 @@ function love.update(dt)
 end
 
 -- Fonction DRAW de Love2D
-function love.draw()
+function love.draw(dt)
 
-  myGame:Draw()
+  myGame:Draw(dt)
   
       
 end
 
 -- Fonction qui se lance lorsque la souris est préssée
 function love.mousepressed(x,y,n)
-  --[[
-    if maBalle.colle == true then
-        maBalle.colle = false
-        maBalle.vx = 400
-        maBalle.vy = -400
+  
+    if myGame.myBalle.colle == true then
+       myGame.myBalle.colle = false
+       myGame.myBalle.vx = 400
+       myGame.myBalle.vy = -400
       end
-  ]]--
+  
 end
   
 -- Fonction qui se lance lorsque une touche est préssée

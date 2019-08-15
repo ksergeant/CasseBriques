@@ -4,15 +4,20 @@ spriteManager.list_sprites = {}
 
 local spriteModel = require("sprite")
 
-function spriteManager:CreateSprite(pName, pTableauImages, pNombreFrames)
+function spriteManager:CreateSprite(pName, pTableauImages, pNombreFrames, pType)
   
   local spriteTempo = {}
  
-  spriteTempo = spriteModel:Create(pName, pTableauImages, pNombreFrames)
+  spriteTempo = spriteModel:Create(pName, pTableauImages, pNombreFrames, pType)
   
+  spriteTempo.largeur = spriteTempo.images[1]:getWidth()
+  spriteTempo.hauteur = spriteTempo.images[1]:getHeight()
+
   table.insert(spriteManager.list_sprites, spriteTempo)
   
   print("Sprite Create")
+
+  return spriteTempo
   
 end
 
@@ -60,8 +65,10 @@ function spriteManager:Update(dt)
         end 
 
         if s.isAnimed == true then
-            s.anime()
+            s:anime()
         end
+
+        
         
       end
       
@@ -78,7 +85,9 @@ function spriteManager:Draw()
       local s = spriteManager.list_sprites[i]
       
       love.graphics.draw(s.images[math.floor(s.currentImage)], 
-        s.posX, s.posY, 0, s.scaleX, s.scaleY, 1)
+        s.posX, s.posY, 0, s.scaleX, s.scaleY, s.oX, s.oY)
+
+        s:draw()
                         
     end
 

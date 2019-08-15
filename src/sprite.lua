@@ -1,6 +1,6 @@
 local spriteModel = {}
 
-function spriteModel:Create(pName, pTableauImages, pNombreFrames)
+function spriteModel:Create(pName, pTableauImages, pNombreFrames, pType)
   
   local sprite = {}
   
@@ -11,12 +11,14 @@ function spriteModel:Create(pName, pTableauImages, pNombreFrames)
   sprite.oY = 0
   sprite.scaleX = 1
   sprite.scaleY = 1
-  sprite.type = nil
+  sprite.type = pType
   sprite.currentImage = 1
   sprite.frames = pNombreFrames
   sprite.images = {} 
   sprite.isAnimed = false
   sprite.delete = false
+  sprite.largeur = 0
+  sprite.hauteur = 0
   
     for i = 1, #pTableauImages do
 
@@ -25,7 +27,7 @@ function spriteModel:Create(pName, pTableauImages, pNombreFrames)
     end
 
   function sprite:anime()
-    print(sprite.name)
+    
     if sprite.currentImage  < sprite.frames then 
       sprite.currentImage = sprite.currentImage + 0.15
       
@@ -33,6 +35,12 @@ function spriteModel:Create(pName, pTableauImages, pNombreFrames)
       sprite.currentImage = 1
     end
 
+  end
+
+  function sprite:draw()
+
+    love.graphics.circle("fill", self.posX, self.posY, 2)
+    print("debug")
   end
   
   

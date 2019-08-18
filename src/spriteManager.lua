@@ -6,35 +6,44 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
   
   local sprite = {}
  
-  sprite.posX = 0
-  sprite.posY = 0
+  sprite.posX = pX
+  sprite.posY = pY
   sprite.name = pName
-  sprite.oX = 0
-  sprite.oY = 0
-  sprite.scaleX = 1
-  sprite.scaleY = 1
   sprite.type = pType
   sprite.currentImage = 1
   sprite.frames = 1
   sprite.images = {} 
-  sprite.isAnimed = false
   sprite.delete = false
-  sprite.largeur = 0
-  sprite.hauteur = 0
+  
 
   if pType == "Balle" then
 
     sprite.colle = false
+    sprite.scaleX = 0.2
+    sprite.scaleY = 0.2
+    sprite.rayon = 4
+    sprite.vx = 0
+    sprite.vy = 0
     sprite.images[1] = love.graphics.newImage("graphiques/Star/Balle.png")
-    sprite.largeur = sprite.images[1]:getWidth()
-    sprite.hauteur = sprite.images[1]:getHeight()
+    sprite.largeur = sprite.images[1]:getWidth() * sprite.scaleX
+    sprite.hauteur = sprite.images[1]:getHeight() * sprite.scaleY
+    sprite.oX = sprite.images[1]:getWidth()/2
+    sprite.oY = sprite.images[1]:getHeight()/2
 
   elseif pType == "Coeur" then 
+    sprite.scaleX = 0.3
+    sprite.scaleY = 0.3
     sprite.images[1] = love.graphics.newImage("graphiques/Star/Coeur.png")
-    sprite.largeur = sprite.images[1]:getWidth()
-    sprite.hauteur = sprite.images[1]:getHeight()
+    sprite.largeur = sprite.images[1]:getWidth() * sprite.scaleX
+    sprite.hauteur = sprite.images[1]:getHeight() * sprite.scaleY
+    sprite.oX = 0
+    sprite.oY = 0
 
   elseif pType == "Raquette" then
+
+    sprite.scaleX = 0.2
+    sprite.scaleY = 0.2
+    sprite.isAnimed = true
     sprite.images[1] = love.graphics.newImage("graphiques/Raquette/RaquetteIdle1.png")
     sprite.images[2] = love.graphics.newImage("graphiques/Raquette/RaquetteIdle2.png")
     sprite.images[3] = love.graphics.newImage("graphiques/Raquette/RaquetteIdle3.png")
@@ -48,10 +57,15 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
     sprite.imagesBonus[1] = love.graphics.newImage("graphiques/Raquette/RaquetteLarge.png")
     sprite.imagesBonus[2] = love.graphics.newImage("graphiques/Raquette/RaquetteShort.png")
 
-    sprite.largeur = sprite.images[1]:getWidth()
-    sprite.hauteur = sprite.images[1]:getHeight()
+    sprite.largeur = sprite.images[1]:getWidth() * sprite.scaleX 
+    sprite.hauteur = sprite.images[1]:getHeight() * sprite.scaleY 
+
+    sprite.oX = sprite.images[1]:getWidth()/2
+    sprite.oY = sprite.images[1]:getHeight()/2
 
   elseif pType == "Brique" then
+    sprite.scaleX = 0.2
+    sprite.scaleY = 0.2
     sprite.images[1] = love.graphics.newImage("graphiques/Brick/Brick1.png")
     sprite.images[2] = love.graphics.newImage("graphiques/Brick/Brick2.png")
     sprite.images[3] = love.graphics.newImage("graphiques/Brick/Brick3.png")
@@ -75,7 +89,15 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
     sprite.imagesBroken[9] = love.graphics.newImage("graphiques/Brick/Brick9Broken.png")
     sprite.imagesBroken[10] = love.graphics.newImage("graphiques/Brick/Brick10Broken.png")
 
+    sprite.largeur = sprite.images[1]:getWidth() * sprite.scaleX 
+    sprite.hauteur = sprite.images[1]:getHeight() * sprite.scaleY 
+
+    sprite.oX = 0
+    sprite.oY = 0
+
   elseif pType == "Wall" then
+    sprite.scaleX = 0.3
+    sprite.scaleY = 0.3
     sprite.images[1] = love.graphics.newImage("graphiques/Wall/Wall1.png")
     sprite.images[2] = love.graphics.newImage("graphiques/Wall/Wall2.png")
     sprite.images[3] = love.graphics.newImage("graphiques/Wall/Wall3.png")
@@ -87,8 +109,15 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
     sprite.images[9] = love.graphics.newImage("graphiques/Wall/Wall9.png")
     sprite.images[10] = love.graphics.newImage("graphiques/Wall/Wall10.png")
 
-  elseif pType == "Bonus" then
+    sprite.largeur = sprite.images[1]:getWidth() * sprite.scaleX 
+    sprite.hauteur = sprite.images[1]:getHeight() * sprite.scaleY 
 
+    sprite.oX = 0
+    sprite.oY = 0
+
+  elseif pType == "Bonus" then
+    sprite.scaleX = 0.3
+    sprite.scaleY = 0.3
     sprite.images[1] = love.graphics.newImage("graphiques/Power/AddBall.png")
     sprite.images[2] = love.graphics.newImage("graphiques/Power/Fast.png")
     sprite.images[3] = love.graphics.newImage("graphiques/Power/FireBall.png")
@@ -102,9 +131,21 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
     sprite.images[11] = love.graphics.newImage("graphiques/Power/Slow.png")
     sprite.images[12] = love.graphics.newImage("graphiques/Power/TirRaquet.png")
 
-  elseif pType == "Missile" then
+    sprite.largeur = sprite.images[1]:getWidth() * sprite.scaleX 
+    sprite.hauteur = sprite.images[1]:getHeight() * sprite.scaleY 
 
+    sprite.oX = 0
+    sprite.oY = 0
+
+  elseif pType == "Missile" then
+    sprite.scaleX = 0.3
+    sprite.scaleY = 0.3
     sprite.images[1] = love.graphics.newImage("graphiques/Star/Missile.png")
+    sprite.largeur = sprite.images[1]:getWidth() * sprite.scaleX 
+    sprite.hauteur = sprite.images[1]:getHeight() * sprite.scaleY 
+
+    sprite.oX = 0
+    sprite.oY = 0
 
   else
       print ("Erreur")
@@ -112,19 +153,27 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
   
   function sprite:anime()
     
-    if sprite.currentImage  < sprite.frames then 
-      sprite.currentImage = sprite.currentImage + 0.15
+    self.frames = #self.images 
+    if self.currentImage  < self.frames then 
+      self.currentImage = self.currentImage + 0.15
       
     else 
-      sprite.currentImage = 1
+      self.currentImage = 1
     end
 
   end
 
   function sprite:draw()
 
-    love.graphics.circle("fill", self.posX, self.posY, 2)
-    print("debug")
+    if self.type == "Balle" or self.type == "Raquette" then
+      love.graphics.circle("fill", self.posX, self.posY, 2)
+      love.graphics.rectangle("line", self.posX- self.largeur/2, self.posY - self.hauteur/2, self.largeur, self.hauteur)
+      print("Balle et Raquette")
+    else
+      love.graphics.circle("fill", self.posX, self.posY, 2)
+      love.graphics.rectangle("line", self.posX, self.posY , self.largeur, self.hauteur)
+    end
+
   end
 
   table.insert(spriteManager.list_sprites, sprite)
@@ -135,7 +184,7 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
   
 end
 
-function spriteManager:SettingSprite(pSpriteName, pPosX, pPosY, pScaleX, pScaleY, pOrigineX, pOrigineY, pType, pIsAnimed)
+function spriteManager:SettingSprite(pSpriteName, pPosX, pPosY)
   
   -- recherche dans le spriteManager et si il est présent, il est modifié
   if #spriteManager.list_sprites~=nil then
@@ -148,12 +197,6 @@ function spriteManager:SettingSprite(pSpriteName, pPosX, pPosY, pScaleX, pScaleY
           
         s.posX = pPosX
         s.posY = pPosY
-        s.scaleX = pScaleX
-        s.scaleY = pScaleY
-        s.oX = pOrigineX
-        s.oY = pOrigineY
-        s.type = pType
-        s.isAnimed = pIsAnimed
         print ("Change of sprite done")
         
       end

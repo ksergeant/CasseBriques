@@ -5,8 +5,8 @@ io.stdout:setvbuf('no')
 if arg[#arg] == "-debug" then require("mobdebug").start() end
 
 -- variable GAME
-local myGame = require("game")
-
+local myGame = require("game") 
+myGameState = require("gameState")
 -- Fonction LOAD de Love2D
 function love.load()
 
@@ -121,6 +121,15 @@ function love.keypressed(key)
     love.event.quit()
   end
   
+  if key == "d" and myGameState.Debug == false then
+    myGameState.Debug = true
+    
+  elseif key == "d" and myGameState.Debug == true then
+    myGameState.Debug = false
+    
+  end
+
+
   print(key)
   
 end

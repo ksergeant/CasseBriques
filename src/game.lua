@@ -1,5 +1,6 @@
 local game = {}
 
+myGameState = require("gameState")
 game.mySpriteManager = require("spriteManager")
 game.background = love.graphics.newImage("graphiques/Background/Background1.png")
 
@@ -11,13 +12,9 @@ game.myWall = {}
 game.largeur = {}
 game.hauteur = {}
 
+game.listCoeur = {}
+
 game.myBalle = game.mySpriteManager:CreateSprite("Balle", "Balle", 335, 480)
-
-game.myCoeur = game.mySpriteManager:CreateSprite("Coeur", "Coeur", 10, 560)
-
-game.myCoeur2 = game.mySpriteManager:CreateSprite("Coeur", "Coeur2", 60, 560)
-
-game.myCoeur3 = game.mySpriteManager:CreateSprite("Coeur", "Coeur3",  110, 560)
 
 game.myRaquette = game.mySpriteManager:CreateSprite("Raquette", "Raquette", 300, 500)
 
@@ -30,7 +27,14 @@ function game:Load()
 self.largeur = love.graphics.getWidth()
 self.hauteur = love.graphics.getHeight()
 self.myBalle.colle = true
-
+local decal = 0
+    for i = 1, myGameState.vies do
+        
+        local CoeurTempo = {}
+        CoeurTempo = self.mySpriteManager:CreateSprite("Coeur", "Coeur"..tostring(i), 10 + decal, 560)
+        table.insert( self.listCoeur, CoeurTempo)
+        decal = decal + 50
+    end
 end
 
 function game:Update(dt)
@@ -72,7 +76,14 @@ if self.myBalle.posX > self.largeur then
   if self.myBalle.posY > self.hauteur then 
     -- on perd une balle
     --sonPerteBalle:play()
-   -- mesVies.valeur = mesVies.valeur - 1
+    myGameState.vies = myGameState.vies - 1
+
+    if #self.listCoeur ~=0 then
+        local i = #self.listCoeur 
+        self.listCoeur[i].delete = true
+        table.remove( self.listCoeur, i )
+    end
+
     self.myBalle.colle = true
   end
 
@@ -96,6 +107,10 @@ if self.myBalle.colle == true then
     end
   end
 
+
+  if myGameState.vies == 0 then
+    love.event.quit()
+  end
   self.mySpriteManager:Update(dt)
 
   
@@ -107,7 +122,15 @@ function game:Draw()
    love.graphics.draw(self.background, 0, 0)  
   
    self.mySpriteManager:Draw()
-  
+   
+   if myGameState.Debug == true then
+
+    love.graphics.print("Nombre de vies "..myGameState.vies
+    .." listeCoeur "..#self.listCoeur
+    .. " listeSprite "..#self.mySpriteManager.list_sprites, 0, 0)
+    
+    end
 end
+
 
 return game

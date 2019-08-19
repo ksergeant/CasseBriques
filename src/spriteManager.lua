@@ -2,6 +2,8 @@ local spriteManager = {}
 
 spriteManager.list_sprites = {}
 
+local myGameState = require("gameState")
+
 function spriteManager:CreateSprite(pType, pName, pX, pY)
   
   local sprite = {}
@@ -165,15 +167,18 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
 
   function sprite:draw()
 
-    if self.type == "Balle" or self.type == "Raquette" then
-      love.graphics.circle("fill", self.posX, self.posY, 2)
-      love.graphics.rectangle("line", self.posX- self.largeur/2, self.posY - self.hauteur/2, self.largeur, self.hauteur)
-      print("Balle et Raquette")
-    else
-      love.graphics.circle("fill", self.posX, self.posY, 2)
-      love.graphics.rectangle("line", self.posX, self.posY , self.largeur, self.hauteur)
+    -- affche le debug du jeu
+    
+    if myGameState.Debug == true then
+      if self.type == "Balle" or self.type == "Raquette" then
+        love.graphics.circle("fill", self.posX, self.posY, 2)
+        love.graphics.rectangle("line", self.posX- self.largeur/2, self.posY - self.hauteur/2, self.largeur, self.hauteur)
+      
+      else
+        love.graphics.circle("fill", self.posX, self.posY, 2)
+        love.graphics.rectangle("line", self.posX, self.posY , self.largeur, self.hauteur)
+      end
     end
-
   end
 
   table.insert(spriteManager.list_sprites, sprite)
@@ -187,7 +192,7 @@ end
 function spriteManager:SettingSprite(pSpriteName, pPosX, pPosY)
   
   -- recherche dans le spriteManager et si il est présent, il est modifié
-  if #spriteManager.list_sprites~=nil then
+  if #spriteManager.list_sprites~=0 then
 
     for i = 1, #spriteManager.list_sprites do
       
@@ -209,9 +214,9 @@ end
 
 function spriteManager:Update(dt)
   
-    if #spriteManager.list_sprites~=nil then
+    if #spriteManager.list_sprites~=0 then
       
-      for i = 1, #spriteManager.list_sprites do
+      for i = #spriteManager.list_sprites, 1 , -1 do
       
         local s = spriteManager.list_sprites[i]
         
@@ -235,9 +240,9 @@ end
 
 function spriteManager:Draw()
   
-  if #spriteManager.list_sprites~=nil then
+  if #spriteManager.list_sprites~=0 then
 
-    for i = 1, #spriteManager.list_sprites do
+    for i = #spriteManager.list_sprites, 1 , -1 do
       
       local s = spriteManager.list_sprites[i]
       

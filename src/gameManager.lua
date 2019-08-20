@@ -35,6 +35,10 @@ local decal = 0
         table.insert( self.listCoeur, CoeurTempo)
         decal = decal + 50
     end
+
+
+
+
 end
 
 function game:Update(dt)
@@ -97,7 +101,7 @@ if self.myBalle.colle == true then
 
 
   -- Tester collision avec la raquette
-  local posCollisionRaquette = self.myRaquette.posY - (self.myRaquette.hauteur/2) - 10
+  local posCollisionRaquette = self.myRaquette.posY - (self.myRaquette.hauteur/2) 
   if self.myBalle.posY > posCollisionRaquette then
     local dist = math.abs(self.myRaquette.posX - self.myBalle.posX)
     if dist < self.myRaquette.largeur/2 then
@@ -111,10 +115,9 @@ if self.myBalle.colle == true then
   if myGameState.vies == 0 then
     love.event.quit()
   end
+
   self.mySpriteManager:Update(dt)
 
-  
-  
 end
 
 function game:Draw()
@@ -127,9 +130,14 @@ function game:Draw()
 
     love.graphics.print("Nombre de vies "..myGameState.vies
     .." listeCoeur "..#self.listCoeur
-    .. " listeSprite "..#self.mySpriteManager.list_sprites, 0, 0)
+    .." listeSprite "..#self.mySpriteManager.list_sprites, 0, 0)
     
     end
+    
+    love.graphics.print("Niveau      "..myGameState.niveauActuel, 810, 520)
+    love.graphics.print("Score                   "..myGameState.score, 765, 550)
+    love.graphics.print("Meilleur                           "..myGameState.meilleurScore, 720, 580)
+    
 end
 
 

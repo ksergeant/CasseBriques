@@ -5,7 +5,7 @@ io.stdout:setvbuf('no')
 if arg[#arg] == "-debug" then require("mobdebug").start() end
 
 -- variable GAME
-local myGame = require("game") 
+local myGame = require("gameManager") 
 myGameState = require("gameState")
 -- Fonction LOAD de Love2D
 function love.load()
@@ -109,8 +109,8 @@ function love.mousepressed(x,y,n)
   
     if myGame.myBalle.colle == true then
        myGame.myBalle.colle = false
-       myGame.myBalle.vx = 400
-       myGame.myBalle.vy = -400
+       myGame.myBalle.vx = 200
+       myGame.myBalle.vy = -200
       end
   
 end

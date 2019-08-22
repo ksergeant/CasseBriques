@@ -2,6 +2,7 @@ local game = {}
 
 myGameState = require("gameState")
 game.mySpriteManager = require("spriteManager")
+game.myBriqueManager = require("briqueManager")
 game.background = love.graphics.newImage("graphiques/Background/Background1.png")
 
 game.myBalle = {}
@@ -17,8 +18,6 @@ game.listCoeur = {}
 game.myBalle = game.mySpriteManager:CreateSprite("Balle", "Balle", 335, 480)
 
 game.myRaquette = game.mySpriteManager:CreateSprite("Raquette", "Raquette", 300, 500)
-
-game.myBrique = game.mySpriteManager:CreateSprite("Brique", "Brique", 50, 50)
 
 game.myWall = game.mySpriteManager:CreateSprite("Wall", "Wall", 200, 300)
 
@@ -36,6 +35,17 @@ local decal = 0
         decal = decal + 50
     end
 
+    local decalBriqueY = 0
+    local nbBrique = 0
+    for n = 1, 5 do
+      local decalBriqueX = 0
+      for i = 1, 13 do
+        game.myBriqueManager:CreateBrick("Brique", "Brique"..tostring(nbBrique), 0  + decalBriqueX, 0 + decalBriqueY, math.random(1, 10) )
+        nbBrique = nbBrique + 1
+        decalBriqueX = decalBriqueX + 77
+      end
+      decalBriqueY = decalBriqueY + 26
+    end
 
 
 

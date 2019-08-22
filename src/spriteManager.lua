@@ -66,6 +66,7 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
     sprite.oY = sprite.images[1]:getHeight()/2
 
   elseif pType == "Brique" then
+    --[[
     sprite.scaleX = 0.2
     sprite.scaleY = 0.2
     sprite.images[1] = love.graphics.newImage("graphiques/Brick/Brick1.png")
@@ -96,7 +97,8 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
 
     sprite.oX = 0
     sprite.oY = 0
-
+    ]]--
+    print("Brick create")
   elseif pType == "Wall" then
     sprite.scaleX = 0.3
     sprite.scaleY = 0.3

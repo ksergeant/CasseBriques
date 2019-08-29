@@ -6,7 +6,7 @@ briqueManager.list_briques = {}
 
 function briqueManager:CreateBrick(pType, pName, pX, pY , pCouleur)
   
-  local brique = spriteManager:CreateSprite("brique", pName, pX, pY)
+  local brique = spriteManager:CreateSprite("Brique", pName, pX, pY)
  
   brique.isBroken = false
   brique.durability = 2
@@ -41,14 +41,33 @@ function briqueManager:CreateBrick(pType, pName, pX, pY , pCouleur)
     brique.largeur = brique.images[1]:getWidth() * brique.scaleX 
     brique.hauteur = brique.images[1]:getHeight() * brique.scaleY 
 
-    brique.oX = 0
-    brique.oY = 0
- 
+    brique.oX = brique.images[1]:getWidth()/2
+    brique.oY = brique.images[1]:getHeight()/2
+    brique.perimetre = math.floor((brique.largeur * 2) + (brique.hauteur * 2))
 
+    brique.pointColli1 = {}
+    brique.pointColli1.posX = brique.posX
+    brique.pointColli1.posY = brique.posY
+
+    brique.pointColli2 = {}
+    brique.pointColli2.posX = brique.posX + brique.largeur
+    brique.pointColli2.posY = brique.posY
+
+    brique.pointColli3 = {}
+    brique.pointColli3.posX = brique.posX + brique.largeur
+    brique.pointColli3.posY = brique.posY + brique.hauteur
+    
+    brique.pointColli4 = {}
+    brique.pointColli4.posX = brique.posX
+    brique.pointColli4.posY = brique.posY + brique.hauteur
+
+    print(brique.perimetre)
   if (pType == "Classique") then
     brique.durability = 1
 
   end
+
+  
 
 table.insert(briqueManager.list_briques, brique)
   
@@ -76,25 +95,22 @@ function briqueManager:Update(dt)
         
 end
 
---[[
+
 function briqueManager:Draw()
   
-  if #briqueManager.list_briques~=nil then
+  if #briqueManager.list_briques~=0 then
 
     for i = 1, #briqueManager.list_briques do
       
       local b = briqueManager.list_briques[i]
       
-      love.graphics.draw(b.images[math.floor(b.currentImage)], 
-        b.posX, b.posY, 0, b.scaleX, b.scaleY, b.oX, b.oY)
-
-        b:draw()
+        --b:draw()
                         
     end
 
   end
 
 end
-]]--
+
 
 return briqueManager

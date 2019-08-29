@@ -66,38 +66,6 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
     sprite.oY = sprite.images[1]:getHeight()/2
 
   elseif pType == "Brique" then
-    --[[
-    sprite.scaleX = 0.2
-    sprite.scaleY = 0.2
-    sprite.images[1] = love.graphics.newImage("graphiques/Brick/Brick1.png")
-    sprite.images[2] = love.graphics.newImage("graphiques/Brick/Brick2.png")
-    sprite.images[3] = love.graphics.newImage("graphiques/Brick/Brick3.png")
-    sprite.images[4] = love.graphics.newImage("graphiques/Brick/Brick4.png")
-    sprite.images[5] = love.graphics.newImage("graphiques/Brick/Brick5.png")
-    sprite.images[6] = love.graphics.newImage("graphiques/Brick/Brick6.png")
-    sprite.images[7] = love.graphics.newImage("graphiques/Brick/Brick7.png")
-    sprite.images[8] = love.graphics.newImage("graphiques/Brick/Brick8.png")
-    sprite.images[9] = love.graphics.newImage("graphiques/Brick/Brick9.png")
-    sprite.images[10] = love.graphics.newImage("graphiques/Brick/Brick10.png")
-
-    sprite.imagesBroken = {}
-    sprite.imagesBroken[1] = love.graphics.newImage("graphiques/Brick/Brick1Broken.png")
-    sprite.imagesBroken[2] = love.graphics.newImage("graphiques/Brick/Brick2Broken.png")
-    sprite.imagesBroken[3] = love.graphics.newImage("graphiques/Brick/Brick3Broken.png")
-    sprite.imagesBroken[4] = love.graphics.newImage("graphiques/Brick/Brick4Broken.png")
-    sprite.imagesBroken[5] = love.graphics.newImage("graphiques/Brick/Brick5Broken.png")
-    sprite.imagesBroken[6] = love.graphics.newImage("graphiques/Brick/Brick6Broken.png")
-    sprite.imagesBroken[7] = love.graphics.newImage("graphiques/Brick/Brick7Broken.png")
-    sprite.imagesBroken[8] = love.graphics.newImage("graphiques/Brick/Brick8Broken.png")
-    sprite.imagesBroken[9] = love.graphics.newImage("graphiques/Brick/Brick9Broken.png")
-    sprite.imagesBroken[10] = love.graphics.newImage("graphiques/Brick/Brick10Broken.png")
-
-    sprite.largeur = sprite.images[1]:getWidth() * sprite.scaleX 
-    sprite.hauteur = sprite.images[1]:getHeight() * sprite.scaleY 
-
-    sprite.oX = 0
-    sprite.oY = 0
-    ]]--
     print("Brick create")
   elseif pType == "Wall" then
     sprite.scaleX = 0.3

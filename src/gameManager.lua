@@ -5,6 +5,10 @@ game.mySpriteManager = require("spriteManager")
 game.myBriqueManager = require("briqueManager")
 game.background = love.graphics.newImage("graphiques/Background/Background1.png")
 
+sonPerteBalle = love.audio.newSource("sons/sfx_deathscream_human2.wav","static")
+sonCollisonBrique = love.audio.newSource("sons/sfx_sounds_impact5.wav","static")
+sonCollisonRaquette = love.audio.newSource("sons/DM-CGS-07.wav","static")
+
 game.myBalle = {}
 game.myRaquette = {} 
 game.myBrique = {}
@@ -15,11 +19,24 @@ game.hauteur = {}
 
 game.listCoeur = {}
 
-game.myBalle = game.mySpriteManager:CreateSprite("Balle", "Balle", 335, 480)
+game.myBalle = game.mySpriteManager:CreateSprite("Balle", "Balle", 335, 440)
 
 game.myRaquette = game.mySpriteManager:CreateSprite("Raquette", "Raquette", 300, 500)
 
-game.myWall = game.mySpriteManager:CreateSprite("Wall", "Wall", 200, 300)
+--game.myWall = game.mySpriteManager:CreateSprite("Wall", "Wall", 200, 300)
+
+function collide3(a1, a2)
+  local x1,y1,x2,y2
+  x1 = a1.posX-a1.largeur/2
+  x2 = a2.posX-a2.largeur/2
+  y1 = a1.posY-a1.hauteur/2
+  y2 = a2.posY-a2.hauteur/2
+  return x1 < x2+a2.largeur and
+         x2 < x1+a1.largeur and
+         y1 < y2+a2.hauteur and
+         y2 < y1+a1.hauteur
+end
+
 
 function game:Load()
 
@@ -35,10 +52,15 @@ local decal = 0
         decal = decal + 50
     end
 
-    local decalBriqueY = 0
+    --self.myBriqueManager:CreateBrick("Brique", "Brique"..tostring(1), 400 , 50 , 1 )
+
+
+    
+    -- Crée les Briques du niveau
+    local decalBriqueY = 14
     local nbBrique = 0
     for n = 1, 5 do
-      local decalBriqueX = 0
+      local decalBriqueX = 40
       for i = 1, 13 do
         game.myBriqueManager:CreateBrick("Brique", "Brique"..tostring(nbBrique), 0  + decalBriqueX, 0 + decalBriqueY, math.random(1, 10) )
         nbBrique = nbBrique + 1
@@ -47,6 +69,8 @@ local decal = 0
       decalBriqueY = decalBriqueY + 26
     end
 
+       
+
 
 
 end
@@ -54,7 +78,23 @@ end
 function game:Update(dt)
 
     self.myRaquette.posX = love.mouse.getX()
-  
+
+    if #self.myBriqueManager.list_briques~=0 then
+      
+      for i = #self.myBriqueManager.list_briques, 1, -1 do
+      
+        local b = self.myBriqueManager.list_briques[i]
+    
+        if collide3(self.myBalle, b) == true then
+       
+          b.delete = true
+          self.myBalle.vy = 0 -self.myBalle.vy
+          sonCollisonBrique:play()
+        
+          print("brique touché")
+        end
+      end
+    end
 -- si la souris sort de l'écran elle est replacée
   if love.mouse.getX() >= self.largeur -50 then
     love.mouse.setX(self.largeur-50)
@@ -72,24 +112,24 @@ if love.mouse.getY() <= 40 then
   love.mouse.setY(40)
 end
 
-if self.myBalle.posX > self.largeur then
+if self.myBalle.posX + self.myBalle.largeur/2 > self.largeur then
     self.myBalle.vx =  0 - self.myBalle.vx
-    self.myBalle.posX = self.largeur
+    self.myBalle.posX = self.largeur - self.myBalle.largeur/2
   end
   
-  if self.myBalle.posX < 0 then
+  if self.myBalle.posX - self.myBalle.largeur/2 < 0 then
     self.myBalle.vx = 0 - self.myBalle.vx
-    self.myBalle.posX = 0
+    self.myBalle.posX = 0 + self.myBalle.largeur/2
   end
   
-  if self.myBalle.posY < 0 then
+  if self.myBalle.posY - self.myBalle.hauteur/2 < 0 then
      self.myBalle.vy = 0 - self.myBalle.vy
-     self.myBalle.posY = 0
+     self.myBalle.posY = 0 +self.myBalle.hauteur/2
   end
   
-  if self.myBalle.posY > self.hauteur then 
+  if self.myBalle.posY + self.myBalle.hauteur/2> self.hauteur then 
     -- on perd une balle
-    --sonPerteBalle:play()
+    sonPerteBalle:play()
     myGameState.vies = myGameState.vies - 1
 
     if #self.listCoeur ~=0 then
@@ -103,13 +143,21 @@ if self.myBalle.posX > self.largeur then
 
 if self.myBalle.colle == true then
     self.myBalle.posX = self.myRaquette.posX 
-    self.myBalle.posY = self.myRaquette.posY - 20
+    self.myBalle.posY = self.myRaquette.posY - 26
   else
     self.myBalle.posX = self.myBalle.posX +(self.myBalle.vx*dt)
     self.myBalle.posY = self.myBalle.posY +(self.myBalle.vy*dt)
   end
 
+  -- Tester collision avec la raquette
+if collide3(self.myBalle, self.myRaquette) == true then
 
+  self.myBalle.vy = 0 - self.myBalle.vy
+  sonCollisonRaquette:play()
+
+end
+
+--[[
   -- Tester collision avec la raquette
   local posCollisionRaquette = self.myRaquette.posY - (self.myRaquette.hauteur/2) 
   if self.myBalle.posY > posCollisionRaquette then
@@ -120,14 +168,14 @@ if self.myBalle.colle == true then
       self.myBalle.posY = posCollisionRaquette
     end
   end
-
+]]--
 
   if myGameState.vies == 0 then
     love.event.quit()
   end
 
   self.mySpriteManager:Update(dt)
-
+  self.myBriqueManager:Update(dt)
 end
 
 function game:Draw()
@@ -137,10 +185,12 @@ function game:Draw()
    self.mySpriteManager:Draw()
    
    if myGameState.Debug == true then
-
+    
     love.graphics.print("Nombre de vies "..myGameState.vies
     .." listeCoeur "..#self.listCoeur
-    .." listeSprite "..#self.mySpriteManager.list_sprites, 0, 0)
+    .." listeSprite "..#self.mySpriteManager.list_sprites 
+    .." listreBrique "..#self.myBriqueManager.list_briques, 0, 0)
+   
     
     end
     

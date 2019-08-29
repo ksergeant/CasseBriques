@@ -12,11 +12,9 @@ function love.load()
 
  myGame:Load()
   
-  sonPerteBalle = love.audio.newSource("sons/sfx_deathscream_human2.wav","static")
-  sonCollisonBrique = love.audio.newSource("sons/sfx_sounds_impact5.wav","static")
-  sonCollisonRaquette = love.audio.newSource("sons/DM-CGS-07.wav","static")
+  
   bgm = love.audio.newSource("musiques/through_space.ogg", "stream")
-  --love.mouse.setVisible(false) -- cache la souris
+  love.mouse.setVisible(false) -- cache la souris
  
 end
 
@@ -24,7 +22,7 @@ end
 function love.update(dt)
 
   myGame:Update(dt)
-  --love.audio.play(bgm)
+  love.audio.play(bgm)
 
   --[[
   
@@ -109,8 +107,8 @@ function love.mousepressed(x,y,n)
   
     if myGame.myBalle.colle == true then
        myGame.myBalle.colle = false
-       myGame.myBalle.vx = 200
-       myGame.myBalle.vy = -200
+       myGame.myBalle.vx =300
+       myGame.myBalle.vy = -300
       end
   
 end

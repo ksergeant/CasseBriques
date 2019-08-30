@@ -3,47 +3,34 @@ local spriteManager = require("spriteManager")
 
 wallManager.list_walls = {}
 
-function wallManager:CreateWall(pType, pName, pTableauImages, pNombreFrames, pCouleur)
+function wallManager:CreateWall(pType, pName, pX, pY, pCouleur)
   
-  local wall = spriteManager:CreateSprite("wall", pName, pTableauImages, pNombreFrames)
+  local wall = spriteManager:CreateSprite("Wall", pName, pX, pY)
  
-  wall.posX = 0
-  wall.posY = 0
   wall.isBroken = false
   wall.durability = 0
-  
   wall.images = {}
-  wall.imagesBroken = {}
-  wall.images[1] = "graphiques/Brick/Brick1.png"
-  wall.images[2] = "graphiques/Brick/Brick2.png"
-  wall.images[3] = "graphiques/Brick/Brick3.png"
-  wall.images[4] = "graphiques/Brick/Brick4.png"
-  wall.images[5] = "graphiques/Brick/Brick5.png"
-  wall.images[6] = "graphiques/Brick/Brick6.png"
-  wall.images[7] = "graphiques/Brick/Brick7.png"
-  wall.images[8] = "graphiques/Brick/Brick8.png"
-  wall.images[9] = "graphiques/Brick/Brick9.png"
-  wall.images[10] = "graphiques/Brick/Brick10.png"
-  
-  wall.imagesBroken[1] = "graphiques/Brick/Brick1Broken.png"
-  wall.imagesBroken[2] = "graphiques/Brick/Brick2Broken.png"
-  wall.imagesBroken[3] = "graphiques/Brick/Brick3Broken.png"
-  wall.imagesBroken[4] = "graphiques/Brick/Brick4Broken.png"
-  wall.imagesBroken[5] = "graphiques/Brick/Brick5Broken.png"
-  wall.imagesBroken[6] = "graphiques/Brick/Brick6Broken.png"
-  wall.imagesBroken[7] = "graphiques/Brick/Brick7Broken.png"
-  wall.imagesBroken[8] = "graphiques/Brick/Brick8Broken.png"
-  wall.imagesBroken[9] = "graphiques/Brick/Brick9Broken.png"
-  wall.imagesBroken[10] = "graphiques/Brick/Brick10Broken.png"
+    wall.scaleX = 0.3
+    wall.scaleY = 0.3
+    wall.currentImage = pCouleur
+    wall.images[1] = love.graphics.newImage("graphiques/Wall/Wall1.png")
+    wall.images[2] = love.graphics.newImage("graphiques/Wall/Wall2.png")
+    wall.images[3] = love.graphics.newImage("graphiques/Wall/Wall3.png")
+    wall.images[4] = love.graphics.newImage("graphiques/Wall/Wall4.png")
+    wall.images[5] = love.graphics.newImage("graphiques/Wall/Wall5.png")
+    wall.images[6] = love.graphics.newImage("graphiques/Wall/Wall6.png")
+    wall.images[7] = love.graphics.newImage("graphiques/Wall/Wall7.png")
+    wall.images[8] = love.graphics.newImage("graphiques/Wall/Wall8.png")
+    wall.images[9] = love.graphics.newImage("graphiques/Wall/Wall9.png")
+    wall.images[10] = love.graphics.newImage("graphiques/Wall/Wall10.png")
 
-  if (pType == "Classique") then
-    wall.durability = 1
+    wall.largeur = wall.images[1]:getWidth() * wall.scaleX 
+    wall.hauteur = wall.images[1]:getHeight() * wall.scaleY 
 
-  end
-  wall.largeur = wall.images[1]:getWidth()
-  wall.hauteur = wall.images[1]:getHeight()
+    wall.oX = wall.images[1]:getWidth()/2
+    wall.oY = wall.images[1]:getHeight()/2
 
-  table.insert(wallManager.list_sprites, wall)
+  table.insert(wallManager.list_walls, wall)
   
   print("wall Create")
 
@@ -52,46 +39,34 @@ function wallManager:CreateWall(pType, pName, pTableauImages, pNombreFrames, pCo
 end
 
 
-
 function wallManager:Update(dt)
   
-    if #wallManager.list_sprites~=nil then
+  if #wallManager.list_walls~=0 then
       
-      for i = 1, #wallManager.list_sprites do
+    for i = #wallManager.list_walls, 1, -1 do
+    
+      local w = wallManager.list_walls[i]
       
-        local s = wallManager.list_sprites[i]
-        
-        if s.delete == true then
+      if w.delete == true then
 
-          table.remove(wallManager.list_sprites, i)
+        table.remove(wallManager.list_walls, i)
 
-        end 
+      end 
 
-        if s.isAnimed == true then
-            s:anime()
-        end
-
-        
-        
-      end
-      
     end
+    
+  end
+    
         
 end
 
 function wallManager:Draw()
   
-  if #wallManager.list_sprites~=nil then
+  if #wallManager.list_walls~=nil then
 
-    for i = 1, #wallManager.list_sprites do
+    for i = 1, #wallManager.list_walls do
       
-      local s = wallManager.list_sprites[i]
-      
-      love.graphics.draw(s.images[math.floor(s.currentImage)], 
-        s.posX, s.posY, 0, s.scaleX, s.scaleY, s.oX, s.oY)
-
-        s:draw()
-                        
+                         
     end
 
   end

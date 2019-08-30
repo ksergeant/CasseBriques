@@ -15,6 +15,7 @@ function love.load()
   
   bgm = love.audio.newSource("musiques/through_space.ogg", "stream")
   love.mouse.setVisible(false) -- cache la souris
+  love.mouse.setPosition(myGame.largeur/2, myGame.hauteur/2)
  
 end
 

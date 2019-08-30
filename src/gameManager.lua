@@ -3,6 +3,7 @@ local game = {}
 myGameState = require("gameState")
 game.mySpriteManager = require("spriteManager")
 game.myBriqueManager = require("briqueManager")
+game.myWallManager = require("wallManager")
 game.background = love.graphics.newImage("graphiques/Background/Background1.png")
 
 sonPerteBalle = love.audio.newSource("sons/sfx_deathscream_human2.wav","static")
@@ -25,7 +26,31 @@ game.myRaquette = game.mySpriteManager:CreateSprite("Raquette", "Raquette", 300,
 
 --game.myWall = game.mySpriteManager:CreateSprite("Wall", "Wall", 200, 300)
 
-function collide3(a1, a2)
+function collideWall(a1, a2)
+  local x1,y1,x2,y2
+  x1 = a1.posX-a1.largeur/2
+  x2 = a2.posX-a2.largeur/2
+  y1 = a1.posY-a1.hauteur/2
+  y2 = a2.posY-a2.hauteur/2
+  return x1 < x2+a2.largeur and
+         x2 < x1+a1.largeur and
+         y1 < y2+a2.hauteur and
+         y2 < y1+a1.hauteur
+end
+
+function collideBrique(a1, a2)
+  local x1,y1,x2,y2
+  x1 = a1.posX-a1.largeur/2
+  x2 = a2.posX-a2.largeur/2
+  y1 = a1.posY-a1.hauteur/2
+  y2 = a2.posY-a2.hauteur/2
+  return x1 < x2+a2.largeur and
+         x2 < x1+a1.largeur and
+         y1 < y2+a2.hauteur and
+         y2 < y1+a1.hauteur
+end
+
+function collideRaquette(a1, a2)
   local x1,y1,x2,y2
   x1 = a1.posX-a1.largeur/2
   x2 = a2.posX-a2.largeur/2
@@ -52,12 +77,8 @@ local decal = 0
         decal = decal + 50
     end
 
-    --self.myBriqueManager:CreateBrick("Brique", "Brique"..tostring(1), 400 , 50 , 1 )
-
-
-    
     -- Crée les Briques du niveau
-    local decalBriqueY = 14
+    local decalBriqueY = 28
     local nbBrique = 0
     for n = 1, 5 do
       local decalBriqueX = 40
@@ -69,10 +90,11 @@ local decal = 0
       decalBriqueY = decalBriqueY + 26
     end
 
-       
-
-
-
+    game.myWallManager:CreateWall("Wall", "Wall1", 200, 250, 1)  
+    game.myWallManager:CreateWall("Wall", "Wall2", 400, 250, 2)
+    game.myWallManager:CreateWall("Wall", "Wall3", 600, 250, 3)
+    game.myWallManager:CreateWall("Wall", "Wall4", 800, 250, 4)
+    
 end
 
 function game:Update(dt)
@@ -81,17 +103,39 @@ function game:Update(dt)
 
     if #self.myBriqueManager.list_briques~=0 then
       
+      local nbCollision = 0
+
       for i = #self.myBriqueManager.list_briques, 1, -1 do
       
         local b = self.myBriqueManager.list_briques[i]
-    
-        if collide3(self.myBalle, b) == true then
+        
+        if collideBrique(self.myBalle, b) == true and nbCollision == 0 then
        
           b.delete = true
           self.myBalle.vy = 0 -self.myBalle.vy
+          
           sonCollisonBrique:play()
-        
+          nbCollision = 1
           print("brique touché")
+        end
+      end
+    end
+
+    if #self.myWallManager.list_walls~=0 then
+      
+      local nbCollision = 0
+
+      for i = #self.myWallManager.list_walls, 1, -1 do
+      
+        local w = self.myWallManager.list_walls[i]
+        
+        if collideWall(self.myBalle, w) == true and nbCollision == 0 then
+       
+          self.myBalle.vy = 0 - self.myBalle.vy
+          
+          sonCollisonBrique:play()
+          nbCollision = 1
+          print("Wall touché")
         end
       end
     end
@@ -150,10 +194,19 @@ if self.myBalle.colle == true then
   end
 
   -- Tester collision avec la raquette
-if collide3(self.myBalle, self.myRaquette) == true then
+if collideRaquette(self.myBalle, self.myRaquette) == true then
 
-  self.myBalle.vy = 0 - self.myBalle.vy
-  sonCollisonRaquette:play()
+  -- cote gauche
+  if self.myBalle.posX + self.myBalle.largeur/2 < self.myRaquette.posX - self.myRaquette.largeur/2 then
+    
+    self.myBalle.vy = 0 - self.myBalle.vy
+    self.myBalle.vx = 0 - self.myBalle.vx
+    sonCollisonRaquette:play()
+  else
+  
+    sonCollisonRaquette:play()
+    self.myBalle.vy = 0 - self.myBalle.vy
+  end
 
 end
 
@@ -176,6 +229,7 @@ end
 
   self.mySpriteManager:Update(dt)
   self.myBriqueManager:Update(dt)
+  self.myWallManager:Update(dt)
 end
 
 function game:Draw()

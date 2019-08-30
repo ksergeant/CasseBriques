@@ -68,24 +68,7 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
   elseif pType == "Brique" then
     print("Brick create")
   elseif pType == "Wall" then
-    sprite.scaleX = 0.3
-    sprite.scaleY = 0.3
-    sprite.images[1] = love.graphics.newImage("graphiques/Wall/Wall1.png")
-    sprite.images[2] = love.graphics.newImage("graphiques/Wall/Wall2.png")
-    sprite.images[3] = love.graphics.newImage("graphiques/Wall/Wall3.png")
-    sprite.images[4] = love.graphics.newImage("graphiques/Wall/Wall4.png")
-    sprite.images[5] = love.graphics.newImage("graphiques/Wall/Wall5.png")
-    sprite.images[6] = love.graphics.newImage("graphiques/Wall/Wall6.png")
-    sprite.images[7] = love.graphics.newImage("graphiques/Wall/Wall7.png")
-    sprite.images[8] = love.graphics.newImage("graphiques/Wall/Wall8.png")
-    sprite.images[9] = love.graphics.newImage("graphiques/Wall/Wall9.png")
-    sprite.images[10] = love.graphics.newImage("graphiques/Wall/Wall10.png")
-
-    sprite.largeur = sprite.images[1]:getWidth() * sprite.scaleX 
-    sprite.hauteur = sprite.images[1]:getHeight() * sprite.scaleY 
-
-    sprite.oX = 0
-    sprite.oY = 0
+    print("Wall Create")
 
   elseif pType == "Bonus" then
     sprite.scaleX = 0.3
@@ -140,13 +123,17 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
     -- affche le debug du jeu
     
     if myGameState.Debug == true then
-      if self.type == "Balle" or self.type == "Raquette" then
+      if self.type == "Balle" or 
+         self.type == "Raquette" or 
+         self.type == "Brique" or 
+         self.type == "Wall" then
+          
         love.graphics.circle("fill", self.posX, self.posY, 2)
         love.graphics.rectangle("line", self.posX- self.largeur/2, self.posY - self.hauteur/2, self.largeur, self.hauteur)
       
       else
         love.graphics.circle("fill", self.posX, self.posY, 2)
-        love.graphics.rectangle("line", self.posX, self.posY , self.largeur, self.hauteur)
+        love.graphics.rectangle("line", self.posX, self.posY, self.largeur, self.hauteur)
       end
     end
   end

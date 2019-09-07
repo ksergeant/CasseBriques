@@ -9,7 +9,7 @@ function briqueManager:CreateBrick(pType, pName, pX, pY , pCouleur)
   local brique = spriteManager:CreateSprite("Brique", pName, pX, pY)
  
   brique.isBroken = false
-  brique.durability = 2
+  brique.durability = 1
   
   brique.scaleX = 0.2
   brique.scaleY = 0.2

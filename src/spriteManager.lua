@@ -65,33 +65,6 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
     sprite.oX = sprite.images[1]:getWidth()/2
     sprite.oY = sprite.images[1]:getHeight()/2
 
-  elseif pType == "Brique" then
-    print("Brick create")
-  elseif pType == "Wall" then
-    print("Wall Create")
-
-  elseif pType == "Bonus" then
-    sprite.scaleX = 0.3
-    sprite.scaleY = 0.3
-    sprite.images[1] = love.graphics.newImage("graphiques/Power/AddBall.png")
-    sprite.images[2] = love.graphics.newImage("graphiques/Power/Fast.png")
-    sprite.images[3] = love.graphics.newImage("graphiques/Power/FireBall.png")
-    sprite.images[4] = love.graphics.newImage("graphiques/Power/GlueBall.png")
-    sprite.images[5] = love.graphics.newImage("graphiques/Power/LargeRaquet.png")
-    sprite.images[6] = love.graphics.newImage("graphiques/Power/Plus50.png")
-    sprite.images[7] = love.graphics.newImage("graphiques/Power/Plus100.png")
-    sprite.images[8] = love.graphics.newImage("graphiques/Power/Plus250.png")
-    sprite.images[9] = love.graphics.newImage("graphiques/Power/Plus500.png")
-    sprite.images[10] = love.graphics.newImage("graphiques/Power/ShortRaquet.png")
-    sprite.images[11] = love.graphics.newImage("graphiques/Power/Slow.png")
-    sprite.images[12] = love.graphics.newImage("graphiques/Power/TirRaquet.png")
-
-    sprite.largeur = sprite.images[1]:getWidth() * sprite.scaleX 
-    sprite.hauteur = sprite.images[1]:getHeight() * sprite.scaleY 
-
-    sprite.oX = 0
-    sprite.oY = 0
-
   elseif pType == "Missile" then
     sprite.scaleX = 0.3
     sprite.scaleY = 0.3
@@ -126,8 +99,8 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
       if self.type == "Balle" or 
          self.type == "Raquette" or 
          self.type == "Brique" or 
-         self.type == "Wall" then
-          
+         self.type == "Wall" or
+         self.type == "Bonus" then
         love.graphics.circle("fill", self.posX, self.posY, 2)
         love.graphics.rectangle("line", self.posX- self.largeur/2, self.posY - self.hauteur/2, self.largeur, self.hauteur)
       

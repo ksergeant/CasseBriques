@@ -1,9 +1,11 @@
 local game = {}
 
+math.randomseed(os.time())
 myGameState = require("gameState")
 game.mySpriteManager = require("spriteManager")
 game.myBriqueManager = require("briqueManager")
 game.myWallManager = require("wallManager")
+game.myBonusManager = require("bonusManager")
 game.background = love.graphics.newImage("graphiques/Background/Background1.png")
 
 sonPerteBalle = love.audio.newSource("sons/sfx_deathscream_human2.wav","static")
@@ -25,6 +27,18 @@ game.myBalle = game.mySpriteManager:CreateSprite("Balle", "Balle", 335, 440)
 game.myRaquette = game.mySpriteManager:CreateSprite("Raquette", "Raquette", 300, 500)
 
 --game.myWall = game.mySpriteManager:CreateSprite("Wall", "Wall", 200, 300)
+
+function collideBonus(a1, a2)
+  local x1,y1,x2,y2
+  x1 = a1.posX-a1.largeur/2
+  x2 = a2.posX-a2.largeur/2
+  y1 = a1.posY-a1.hauteur/2
+  y2 = a2.posY-a2.hauteur/2
+  return x1 < x2+a2.largeur and
+         x2 < x1+a1.largeur and
+         y1 < y2+a2.hauteur and
+         y2 < y1+a1.hauteur
+end
 
 function collideWall(a1, a2)
   local x1,y1,x2,y2
@@ -99,6 +113,7 @@ end
 
 function game:Update(dt)
 
+  local nbBonus = #self.myBonusManager.list_bonus
     self.myRaquette.posX = love.mouse.getX()
 
     if #self.myBriqueManager.list_briques~=0 then
@@ -111,7 +126,17 @@ function game:Update(dt)
         
         if collideBrique(self.myBalle, b) == true and nbCollision == 0 then
        
-          b.delete = true
+          b.durability = b.durability - 1
+          if b.durability < 1 then
+
+            b.delete = true
+            myGameState.score = myGameState.score + 100
+            local probaBonus = math.random( 1,20)
+            if probaBonus >= 15 then 
+              self.myBonusManager:CreateBonus("Bonus","Bonus"..tostring(nbBonus), b.posX, b.posY + 10, math.random(1, 12))
+            end
+          end
+          
           self.myBalle.vy = 0 -self.myBalle.vy
           
           sonCollisonBrique:play()
@@ -120,6 +145,7 @@ function game:Update(dt)
         end
       end
     end
+
 
     if #self.myWallManager.list_walls~=0 then
       
@@ -139,6 +165,44 @@ function game:Update(dt)
         end
       end
     end
+
+
+     
+    if #self.myBonusManager.list_bonus~=0 then
+
+      for i = #self.myBonusManager.list_bonus, 1, -1 do
+
+          local bo = self.myBonusManager.list_bonus[i] 
+
+          if collideBonus(self.myRaquette, bo) == true then
+            
+            bo.delete = true
+            print("Bonus ", bo.currentImage," Récupèré")
+            if bo.currentImage == 2 then
+              self.myBalle.vx = 350
+              self.myBalle.vy = -350
+            elseif bo.currentImage == 6 then
+              myGameState.score = myGameState.score + 50
+            elseif bo.currentImage == 7 then
+              myGameState.score = myGameState.score + 100
+            elseif bo.currentImage == 8 then
+              myGameState.score = myGameState.score + 250
+            elseif bo.currentImage == 9 then
+              myGameState.score = myGameState.score + 500   
+            elseif bo.currentImage == 11 then
+              self.myBalle.vx = 250
+              self.myBalle.vy = -250   
+            end
+
+          end
+
+      end
+
+    end
+
+    
+
+
 -- si la souris sort de l'écran elle est replacée
   if love.mouse.getX() >= self.largeur -50 then
     love.mouse.setX(self.largeur-50)
@@ -230,6 +294,7 @@ end
   self.mySpriteManager:Update(dt)
   self.myBriqueManager:Update(dt)
   self.myWallManager:Update(dt)
+  self.myBonusManager:Update(dt)
 end
 
 function game:Draw()

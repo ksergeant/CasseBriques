@@ -108,7 +108,7 @@ function love.mousepressed(x,y,n)
   
     if myGame.myBalle.colle == true then
        myGame.myBalle.colle = false
-       myGame.myBalle.vx =300
+       myGame.myBalle.vx = 300
        myGame.myBalle.vy = -300
       end
   

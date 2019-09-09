@@ -1,49 +1,28 @@
 local balleManager = {}
 local spriteManager = require("spriteManager")
 
-balleManager.list_balle = {}
+balleManager.list_balls = {}
 
-function balleManager:CreateBall(pType, pName, pTableauImages, pNombreFrames, pCouleur)
+function balleManager:CreateBall(pType, pName, pX, pY)
   
-  local balle = spriteManager:CreateSprite("balle", pName, pTableauImages, pNombreFrames)
+  local balle = spriteManager:CreateSprite("Balle", pName, pX, pY)
  
-  balle.posX = 0
-  balle.posY = 0
-  balle.isBroken = false
-  balle.durability = 0
-  
   balle.images = {}
-  balle.imagesBroken = {}
-  balle.images[1] = "graphiques/Brick/Brick1.png"
-  balle.images[2] = "graphiques/Brick/Brick2.png"
-  balle.images[3] = "graphiques/Brick/Brick3.png"
-  balle.images[4] = "graphiques/Brick/Brick4.png"
-  balle.images[5] = "graphiques/Brick/Brick5.png"
-  balle.images[6] = "graphiques/Brick/Brick6.png"
-  balle.images[7] = "graphiques/Brick/Brick7.png"
-  balle.images[8] = "graphiques/Brick/Brick8.png"
-  balle.images[9] = "graphiques/Brick/Brick9.png"
-  balle.images[10] = "graphiques/Brick/Brick10.png"
-  
-  balle.imagesBroken[1] = "graphiques/Brick/Brick1Broken.png"
-  balle.imagesBroken[2] = "graphiques/Brick/Brick2Broken.png"
-  balle.imagesBroken[3] = "graphiques/Brick/Brick3Broken.png"
-  balle.imagesBroken[4] = "graphiques/Brick/Brick4Broken.png"
-  balle.imagesBroken[5] = "graphiques/Brick/Brick5Broken.png"
-  balle.imagesBroken[6] = "graphiques/Brick/Brick6Broken.png"
-  balle.imagesBroken[7] = "graphiques/Brick/Brick7Broken.png"
-  balle.imagesBroken[8] = "graphiques/Brick/Brick8Broken.png"
-  balle.imagesBroken[9] = "graphiques/Brick/Brick9Broken.png"
-  balle.imagesBroken[10] = "graphiques/Brick/Brick10Broken.png"
+ 
+  balle.colle = false
+  balle.scaleX = 0.2
+  balle.scaleY = 0.2
+  balle.rayon = 4
+  balle.vx = 0
+  balle.vy = 0
+  balle.vitesse = 1
+  balle.images[1] = love.graphics.newImage("graphiques/Star/Balle.png")
+  balle.largeur = balle.images[1]:getWidth() * balle.scaleX
+  balle.hauteur = balle.images[1]:getHeight() * balle.scaleY
+  balle.oX = balle.images[1]:getWidth()/2
+  balle.oY = balle.images[1]:getHeight()/2
 
-  if (pType == "Classique") then
-    balle.durability = 1
-
-  end
-  balle.largeur = balle.images[1]:getWidth()
-  balle.hauteur = balle.images[1]:getHeight()
-
-  table.insert(balleManager.list_sprites, balle)
+  table.insert(balleManager.list_balls, balle)
   
   print("balle Create")
 
@@ -51,46 +30,40 @@ function balleManager:CreateBall(pType, pName, pTableauImages, pNombreFrames, pC
   
 end
 
-
-
 function balleManager:Update(dt)
   
-    if #balleManager.list_sprites~=nil then
+    if #balleManager.list_balls~=0 then
       
-      for i = 1, #balleManager.list_sprites do
+      for i = #balleManager.list_balls, 1, -1 do
       
-        local s = balleManager.list_sprites[i]
+        local ball = balleManager.list_balls[i]
         
-        if s.delete == true then
+        if ball.delete == true then
 
-          table.remove(balleManager.list_sprites, i)
+          table.remove(balleManager.list_balls, i)
 
         end 
 
-        if s.isAnimed == true then
-            s:anime()
-        end
-
-        
         
       end
       
     end
+
         
 end
 
 function balleManager:Draw()
   
-  if #balleManager.list_sprites~=nil then
+  if #balleManager.list_balls~=nil then
 
-    for i = 1, #balleManager.list_sprites do
+    for i = 1, #balleManager.list_balls do
       
-      local s = balleManager.list_sprites[i]
+      local ball = balleManager.list_balls[i]
       
-      love.graphics.draw(s.images[math.floor(s.currentImage)], 
-        s.posX, s.posY, 0, s.scaleX, s.scaleY, s.oX, s.oY)
+      love.graphics.draw(ball.images[math.floor(ball.currentImage)], 
+        ball.posX, ball.posY, 0, ball.scaleX, ball.scaleY, ball.oX, ball.oY)
 
-        s:draw()
+       -- ball:draw()
                         
     end
 

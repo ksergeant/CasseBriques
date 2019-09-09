@@ -6,28 +6,24 @@ game.mySpriteManager = require("spriteManager")
 game.myBriqueManager = require("briqueManager")
 game.myWallManager = require("wallManager")
 game.myBonusManager = require("bonusManager")
+game.myBalleManager = require("balleManager")
 game.background = love.graphics.newImage("graphiques/Background/Background1.png")
 
 sonPerteBalle = love.audio.newSource("sons/sfx_deathscream_human2.wav","static")
 sonCollisonBrique = love.audio.newSource("sons/sfx_sounds_impact5.wav","static")
 sonCollisonRaquette = love.audio.newSource("sons/DM-CGS-07.wav","static")
+sonPowerUp = love.audio.newSource("sons/Powerup18.wav","static")
 
 game.myBalle = {}
 game.myRaquette = {} 
-game.myBrique = {}
-game.myWall = {}
 
-game.largeur = {}
-game.hauteur = {}
+myGameState.myBalle = game.myBalleManager:CreateBall("Balle", "Balle", 335, 440)
 
 game.listCoeur = {}
 
-game.myBalle = game.mySpriteManager:CreateSprite("Balle", "Balle", 335, 440)
-
 game.myRaquette = game.mySpriteManager:CreateSprite("Raquette", "Raquette", 300, 500)
-
---game.myWall = game.mySpriteManager:CreateSprite("Wall", "Wall", 200, 300)
-
+game.BonusActif = false
+game.timeBonus = 0
 function collideBonus(a1, a2)
   local x1,y1,x2,y2
   x1 = a1.posX-a1.largeur/2
@@ -79,9 +75,7 @@ end
 
 function game:Load()
 
-self.largeur = love.graphics.getWidth()
-self.hauteur = love.graphics.getHeight()
-self.myBalle.colle = true
+myGameState.myBalle.colle = true
 local decal = 0
     for i = 1, myGameState.vies do
         
@@ -104,10 +98,10 @@ local decal = 0
       decalBriqueY = decalBriqueY + 26
     end
 
-    game.myWallManager:CreateWall("Wall", "Wall1", 200, 250, 1)  
-    game.myWallManager:CreateWall("Wall", "Wall2", 400, 250, 2)
-    game.myWallManager:CreateWall("Wall", "Wall3", 600, 250, 3)
-    game.myWallManager:CreateWall("Wall", "Wall4", 800, 250, 4)
+   -- game.myWallManager:CreateWall("Wall", "Wall1", 200, 250, 1)  
+  --  game.myWallManager:CreateWall("Wall", "Wall2", 400, 250, 2)
+  --  game.myWallManager:CreateWall("Wall", "Wall3", 600, 250, 3)
+  --  game.myWallManager:CreateWall("Wall", "Wall4", 800, 250, 4)
     
 end
 
@@ -124,7 +118,7 @@ function game:Update(dt)
       
         local b = self.myBriqueManager.list_briques[i]
         
-        if collideBrique(self.myBalle, b) == true and nbCollision == 0 then
+        if collideBrique(myGameState.myBalle, b) == true and nbCollision == 0 then
        
           b.durability = b.durability - 1
           if b.durability < 1 then
@@ -137,7 +131,7 @@ function game:Update(dt)
             end
           end
           
-          self.myBalle.vy = 0 -self.myBalle.vy
+          myGameState.myBalle.vy = 0 -myGameState.myBalle.vy
           
           sonCollisonBrique:play()
           nbCollision = 1
@@ -155,9 +149,9 @@ function game:Update(dt)
       
         local w = self.myWallManager.list_walls[i]
         
-        if collideWall(self.myBalle, w) == true and nbCollision == 0 then
+        if collideWall(myGameState.myBalle, w) == true and nbCollision == 0 then
        
-          self.myBalle.vy = 0 - self.myBalle.vy
+          myGameState.myBalle.vy = 0 - myGameState.myBalle.vy
           
           sonCollisonBrique:play()
           nbCollision = 1
@@ -178,9 +172,13 @@ function game:Update(dt)
             
             bo.delete = true
             print("Bonus ", bo.currentImage," Récupèré")
+            sonPowerUp:play()
             if bo.currentImage == 2 then
-              self.myBalle.vx = 350
-              self.myBalle.vy = -350
+
+              self.BonusActif = true
+              self.timeBonus = 0
+              myGameState.myBalle.vitesse = 1.3
+              
             elseif bo.currentImage == 6 then
               myGameState.score = myGameState.score + 50
             elseif bo.currentImage == 7 then
@@ -190,8 +188,9 @@ function game:Update(dt)
             elseif bo.currentImage == 9 then
               myGameState.score = myGameState.score + 500   
             elseif bo.currentImage == 11 then
-              self.myBalle.vx = 250
-              self.myBalle.vy = -250   
+              self.BonusActif = true
+              self.timeBonus = 0
+              myGameState.myBalle.vitesse = 0.7  
             end
 
           end
@@ -204,38 +203,38 @@ function game:Update(dt)
 
 
 -- si la souris sort de l'écran elle est replacée
-  if love.mouse.getX() >= self.largeur -50 then
-    love.mouse.setX(self.largeur-50)
+  if love.mouse.getX() >= myGameState.largeur -50 then
+    love.mouse.setX(myGameState.largeur-50)
   end
 
 if love.mouse.getX() <= 50 then
   love.mouse.setX(50)
 end
 
-if love.mouse.getY() >= self.hauteur-40 then
-  love.mouse.setY(self.hauteur -40)
+if love.mouse.getY() >= myGameState.hauteur-40 then
+  love.mouse.setY(myGameState.hauteur -40)
 end
 
 if love.mouse.getY() <= 40 then
   love.mouse.setY(40)
 end
 
-if self.myBalle.posX + self.myBalle.largeur/2 > self.largeur then
-    self.myBalle.vx =  0 - self.myBalle.vx
-    self.myBalle.posX = self.largeur - self.myBalle.largeur/2
+if myGameState.myBalle.posX + myGameState.myBalle.largeur/2 > myGameState.largeur then
+  myGameState.myBalle.vx =  0 - myGameState.myBalle.vx
+  myGameState.myBalle.posX = myGameState.largeur - myGameState.myBalle.largeur/2
   end
   
-  if self.myBalle.posX - self.myBalle.largeur/2 < 0 then
-    self.myBalle.vx = 0 - self.myBalle.vx
-    self.myBalle.posX = 0 + self.myBalle.largeur/2
+  if myGameState.myBalle.posX - myGameState.myBalle.largeur/2 < 0 then
+    myGameState.myBalle.vx = 0 - myGameState.myBalle.vx
+    myGameState.myBalle.posX = 0 + myGameState.myBalle.largeur/2
   end
   
-  if self.myBalle.posY - self.myBalle.hauteur/2 < 0 then
-     self.myBalle.vy = 0 - self.myBalle.vy
-     self.myBalle.posY = 0 +self.myBalle.hauteur/2
+  if myGameState.myBalle.posY - myGameState.myBalle.hauteur/2 < 0 then
+    myGameState.myBalle.vy = 0 - myGameState.myBalle.vy
+    myGameState.myBalle.posY = 0 + myGameState.myBalle.hauteur/2
   end
   
-  if self.myBalle.posY + self.myBalle.hauteur/2> self.hauteur then 
+  if myGameState.myBalle.posY + myGameState.myBalle.hauteur/2> myGameState.hauteur then 
     -- on perd une balle
     sonPerteBalle:play()
     myGameState.vies = myGameState.vies - 1
@@ -246,30 +245,30 @@ if self.myBalle.posX + self.myBalle.largeur/2 > self.largeur then
         table.remove( self.listCoeur, i )
     end
 
-    self.myBalle.colle = true
+    myGameState.myBalle.colle = true
   end
 
-if self.myBalle.colle == true then
-    self.myBalle.posX = self.myRaquette.posX 
-    self.myBalle.posY = self.myRaquette.posY - 26
+if myGameState.myBalle.colle == true then
+  myGameState.myBalle.posX = self.myRaquette.posX 
+  myGameState.myBalle.posY = self.myRaquette.posY - 26
   else
-    self.myBalle.posX = self.myBalle.posX +(self.myBalle.vx*dt)
-    self.myBalle.posY = self.myBalle.posY +(self.myBalle.vy*dt)
+    myGameState.myBalle.posX = myGameState.myBalle.posX +(myGameState.myBalle.vx*dt*myGameState.myBalle.vitesse)
+    myGameState.myBalle.posY = myGameState.myBalle.posY +(myGameState.myBalle.vy*dt*myGameState.myBalle.vitesse)
   end
 
   -- Tester collision avec la raquette
-if collideRaquette(self.myBalle, self.myRaquette) == true then
+if collideRaquette(myGameState.myBalle, self.myRaquette) == true then
 
   -- cote gauche
-  if self.myBalle.posX + self.myBalle.largeur/2 < self.myRaquette.posX - self.myRaquette.largeur/2 then
+  if myGameState.myBalle.posX + myGameState.myBalle.largeur/2 < self.myRaquette.posX - self.myRaquette.largeur/2 then
     
-    self.myBalle.vy = 0 - self.myBalle.vy
-    self.myBalle.vx = 0 - self.myBalle.vx
+    myGameState.myBalle.vy = 0 - myGameState.myBalle.vy
+    myGameState.myBalle.vx = 0 - myGameState.myBalle.vx
     sonCollisonRaquette:play()
   else
   
     sonCollisonRaquette:play()
-    self.myBalle.vy = 0 - self.myBalle.vy
+    myGameState.myBalle.vy = 0 - myGameState.myBalle.vy
   end
 
 end
@@ -295,6 +294,22 @@ end
   self.myBriqueManager:Update(dt)
   self.myWallManager:Update(dt)
   self.myBonusManager:Update(dt)
+  self.myBalleManager:Update(dt)
+
+  if self.BonusActif == true then
+     self.timeBonus = math.abs(self.timeBonus + dt)
+  end
+   
+  if self.timeBonus > 10 then
+
+    self.timeBonus = 0
+    self.BonusActif = false
+  end
+  
+  if self.BonusActif == false then
+    myGameState.myBalle.vitesse = 1
+  end
+
 end
 
 function game:Draw()
@@ -312,7 +327,9 @@ function game:Draw()
    
     
     end
-    
+
+    love.graphics.print("Bonus     "..tostring(self.BonusActif), 850, 490)
+    love.graphics.print(" : "..tostring(self.timeBonus), 950, 490)
     love.graphics.print("Niveau      "..myGameState.niveauActuel, 810, 520)
     love.graphics.print("Score                   "..myGameState.score, 765, 550)
     love.graphics.print("Meilleur                           "..myGameState.meilleurScore, 720, 580)

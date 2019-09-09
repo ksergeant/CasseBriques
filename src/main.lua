@@ -15,7 +15,7 @@ function love.load()
   
   bgm = love.audio.newSource("musiques/through_space.ogg", "stream")
   love.mouse.setVisible(false) -- cache la souris
-  love.mouse.setPosition(myGame.largeur/2, myGame.hauteur/2)
+  love.mouse.setPosition(myGameState.largeur/2, myGameState.hauteur/2)
  
 end
 
@@ -106,10 +106,10 @@ end
 -- Fonction qui se lance lorsque la souris est préssée
 function love.mousepressed(x,y,n)
   
-    if myGame.myBalle.colle == true then
-       myGame.myBalle.colle = false
-       myGame.myBalle.vx = 300
-       myGame.myBalle.vy = -300
+    if myGameState.myBalle.colle == true then
+      myGameState.myBalle.colle = false
+      myGameState.myBalle.vx = 300
+      myGameState.myBalle.vy = -300
       end
   
 end

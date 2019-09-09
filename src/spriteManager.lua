@@ -17,22 +17,7 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
   sprite.images = {} 
   sprite.delete = false
   
-
-  if pType == "Balle" then
-
-    sprite.colle = false
-    sprite.scaleX = 0.2
-    sprite.scaleY = 0.2
-    sprite.rayon = 4
-    sprite.vx = 0
-    sprite.vy = 0
-    sprite.images[1] = love.graphics.newImage("graphiques/Star/Balle.png")
-    sprite.largeur = sprite.images[1]:getWidth() * sprite.scaleX
-    sprite.hauteur = sprite.images[1]:getHeight() * sprite.scaleY
-    sprite.oX = sprite.images[1]:getWidth()/2
-    sprite.oY = sprite.images[1]:getHeight()/2
-
-  elseif pType == "Coeur" then 
+   if pType == "Coeur" then 
     sprite.scaleX = 0.3
     sprite.scaleY = 0.3
     sprite.images[1] = love.graphics.newImage("graphiques/Star/Coeur.png")

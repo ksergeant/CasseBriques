@@ -23,7 +23,26 @@ game.listCoeur = {}
 
 game.myRaquette = game.mySpriteManager:CreateSprite("Raquette", "Raquette", 300, 500)
 game.BonusActif = false
+
+game.collisionRaquette = {}
+game.collisionRaquette.x = 0
+game.collisionRaquette.y = 0
+
+game.collisionBrique = {}
+game.collisionBrique.x = 0
+game.collisionBrique.y = 0
+
 game.timeBonus = 0
+
+-- Calcul d'un angle entre 2 coordonnées
+function math.angle(x1,y1, x2,y2)
+  return math.atan2(y2-y1, x2-x1)
+end
+
+--local angle = math.angle(psZombie.x,psZombie.y,math.random(0,screenWidth),math.random(0,screenHeight))
+--   psZombie.vx = psZombie.speed * 60 * math.cos(angle)
+--   psZombie.vy = psZombie.speed * 60 * math.sin(angle)
+
 function collideBonus(a1, a2)
   local x1,y1,x2,y2
   x1 = a1.posX-a1.largeur/2
@@ -119,7 +138,11 @@ function game:Update(dt)
         local b = self.myBriqueManager.list_briques[i]
         
         if collideBrique(myGameState.myBalle, b) == true and nbCollision == 0 then
-       
+          
+          -- Point de collision
+          self.collisionBrique.x = myGameState.myBalle.posX
+          self.collisionBrique.y = myGameState.myBalle.posY - myGameState.myBalle.hauteur /2
+
           b.durability = b.durability - 1
           if b.durability < 1 then
 
@@ -249,15 +272,42 @@ if myGameState.myBalle.posX + myGameState.myBalle.largeur/2 > myGameState.largeu
   end
 
 if myGameState.myBalle.colle == true then
+
+  -- animation de la balle
+  local limiteHauteurBalle = self.myRaquette.posY - 50
+  local limiteRaquette = self.myRaquette.posY - 26
+  
   myGameState.myBalle.posX = self.myRaquette.posX 
-  myGameState.myBalle.posY = self.myRaquette.posY - 26
+  myGameState.myBalle.posY = myGameState.myBalle.posY + limiteHauteurBalle * dt /20
+
+  if myGameState.myBalle.posY >= limiteRaquette then
+      myGameState.myBalle.posY = limiteHauteurBalle
+  end
+
   else
+   -- myGameState.myBalle.posX = myGameState.myBalle.posX +(myGameState.myBalle.vx*dt*myGameState.myBalle.vitesse)
+   -- myGameState.myBalle.posY = myGameState.myBalle.posY +(myGameState.myBalle.vy*dt*myGameState.myBalle.vitesse)
+
     myGameState.myBalle.posX = myGameState.myBalle.posX +(myGameState.myBalle.vx*dt*myGameState.myBalle.vitesse)
     myGameState.myBalle.posY = myGameState.myBalle.posY +(myGameState.myBalle.vy*dt*myGameState.myBalle.vitesse)
   end
 
   -- Tester collision avec la raquette
 if collideRaquette(myGameState.myBalle, self.myRaquette) == true then
+
+    -- Point de collision
+    self.collisionRaquette.x = myGameState.myBalle.posX
+    self.collisionRaquette.y = myGameState.myBalle.posY + myGameState.myBalle.hauteur /2
+
+    -- Pourcentage point de collision
+    local pointOrigineRaquette = {}
+    pointOrigineRaquette.x = self.myRaquette.posX - self.myRaquette.largeur/2
+    pointOrigineRaquette.y = self.myRaquette.posY - self.myRaquette.hauteur/2
+    pointOrigineRaquette.fullPourcent = pointOrigineRaquette.x + self.myRaquette.largeur
+    
+    self.collisionRaquette.restant = pointOrigineRaquette.fullPourcent - self.collisionRaquette.x
+    self.collisionRaquette.pourcent = self.myRaquette.largeur - self.collisionRaquette.restant
+    self.collisionRaquette.pourcentFinal = (self.collisionRaquette.pourcent / self.myRaquette.largeur) * 100
 
   -- cote gauche
   if myGameState.myBalle.posX + myGameState.myBalle.largeur/2 < self.myRaquette.posX - self.myRaquette.largeur/2 then
@@ -319,17 +369,25 @@ function game:Draw()
    self.mySpriteManager:Draw()
    
    if myGameState.Debug == true then
-    
+
     love.graphics.print("Nombre de vies "..myGameState.vies
     .." listeCoeur "..#self.listCoeur
     .." listeSprite "..#self.mySpriteManager.list_sprites 
-    .." listreBrique "..#self.myBriqueManager.list_briques, 0, 0)
-   
-    
-    end
+    .." listreBrique "..#self.myBriqueManager.list_briques
+    .." PourcentageCollisionRaquette "..math.floor(self.collisionRaquette.pourcentFinal), 0, 0)
 
     love.graphics.print("Bonus     "..tostring(self.BonusActif), 850, 490)
     love.graphics.print(" : "..tostring(self.timeBonus), 950, 490)
+    
+    local r,g,b = love.graphics.getColor() 
+    love.graphics.setColor(1,0,0)
+    love.graphics.circle("fill", self.collisionRaquette.x, self.collisionRaquette.y, 3)
+    love.graphics.circle("fill", self.collisionBrique.x, self.collisionBrique.y, 3)
+    love.graphics.setColor(r,g,b)
+    
+    end
+
+    
     love.graphics.print("Niveau      "..myGameState.niveauActuel, 810, 520)
     love.graphics.print("Score                   "..myGameState.score, 765, 550)
     love.graphics.print("Meilleur                           "..myGameState.meilleurScore, 720, 580)

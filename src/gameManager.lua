@@ -39,9 +39,7 @@ function math.angle(x1,y1, x2,y2)
   return math.atan2(y2-y1, x2-x1)
 end
 
---local angle = math.angle(psZombie.x,psZombie.y,math.random(0,screenWidth),math.random(0,screenHeight))
---   psZombie.vx = psZombie.speed * 60 * math.cos(angle)
---   psZombie.vy = psZombie.speed * 60 * math.sin(angle)
+
 
 function collideBonus(a1, a2)
   local x1,y1,x2,y2
@@ -139,6 +137,7 @@ function game:Update(dt)
         
         if collideBrique(myGameState.myBalle, b) == true and nbCollision == 0 then
           
+         -- myGameState.myBalle.destinationX = 
           -- Point de collision
           self.collisionBrique.x = myGameState.myBalle.posX
           self.collisionBrique.y = myGameState.myBalle.posY - myGameState.myBalle.hauteur /2
@@ -285,11 +284,22 @@ if myGameState.myBalle.colle == true then
   end
 
   else
+
+    --local angle = math.angle(psZombie.x,psZombie.y,math.random(0,screenWidth),math.random(0,screenHeight))
+    --   psZombie.vx = psZombie.speed * 60 * math.cos(angle)
+    --   psZombie.vy = psZombie.speed * 60 * math.sin(angle)
+
+    myGameState.myBalle.destinationAngle = math.angle(myGameState.myBalle.posX, myGameState.myBalle.posY,
+    myGameState.myBalle.destinationX, myGameState.myBalle.destinationY)
+    
+    myGameState.myBalle.vx = 300 * math.cos(myGameState.myBalle.destinationAngle)
+    myGameState.myBalle.vy = 300 * math.sin(myGameState.myBalle.destinationAngle)
+
+    myGameState.myBalle.posX = myGameState.myBalle.posX + myGameState.myBalle.vx * dt
+    myGameState.myBalle.posY = myGameState.myBalle.posY + myGameState.myBalle.vy * dt
+
    -- myGameState.myBalle.posX = myGameState.myBalle.posX +(myGameState.myBalle.vx*dt*myGameState.myBalle.vitesse)
    -- myGameState.myBalle.posY = myGameState.myBalle.posY +(myGameState.myBalle.vy*dt*myGameState.myBalle.vitesse)
-
-    myGameState.myBalle.posX = myGameState.myBalle.posX +(myGameState.myBalle.vx*dt*myGameState.myBalle.vitesse)
-    myGameState.myBalle.posY = myGameState.myBalle.posY +(myGameState.myBalle.vy*dt*myGameState.myBalle.vitesse)
   end
 
   -- Tester collision avec la raquette
@@ -374,8 +384,8 @@ function game:Draw()
     .." listeCoeur "..#self.listCoeur
     .." listeSprite "..#self.mySpriteManager.list_sprites 
     .." listreBrique "..#self.myBriqueManager.list_briques
-    .." PourcentageCollisionRaquette "..math.floor(self.collisionRaquette.pourcentFinal), 0, 0)
-
+    --.." PourcentageCollisionRaquette "..math.floor(self.collisionRaquette.pourcentFinal)
+    .." Desti "..myGameState.myBalle.destinationX, 0, 0)
     love.graphics.print("Bonus     "..tostring(self.BonusActif), 850, 490)
     love.graphics.print(" : "..tostring(self.timeBonus), 950, 490)
     

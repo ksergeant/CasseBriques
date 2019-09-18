@@ -15,6 +15,9 @@ function balleManager:CreateBall(pType, pName, pX, pY)
   balle.rayon = 4
   balle.vx = 0
   balle.vy = 0
+  balle.destinationX = 0
+  balle.destinationY = 0
+  balle.destinationAngle = 0
   balle.vitesse = 1
   balle.images[1] = love.graphics.newImage("graphiques/Star/Balle.png")
   balle.largeur = balle.images[1]:getWidth() * balle.scaleX

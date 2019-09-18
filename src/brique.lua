@@ -1,4 +1,0 @@
-local Brique = {}
-
-
-return Brique

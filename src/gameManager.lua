@@ -7,12 +7,15 @@ game.myBriqueManager = require("briqueManager")
 game.myWallManager = require("wallManager")
 game.myBonusManager = require("bonusManager")
 game.myBalleManager = require("balleManager")
+game.myExploManager = require("exploManager")
+
 game.background = love.graphics.newImage("graphiques/Background/Background1.png")
 
-sonPerteBalle = love.audio.newSource("sons/sfx_deathscream_human2.wav","static")
-sonCollisonBrique = love.audio.newSource("sons/sfx_sounds_impact5.wav","static")
-sonCollisonRaquette = love.audio.newSource("sons/DM-CGS-07.wav","static")
-sonPowerUp = love.audio.newSource("sons/Powerup18.wav","static")
+sonPerteBalle = love.audio.newSource("sons/sfx_deathscream_human2.wav", "static")
+sonCollisonBrique = love.audio.newSource("sons/sfx_sounds_impact5.wav", "static")
+sonCollisonRaquette = love.audio.newSource("sons/DM-CGS-07.wav", "static")
+sonPowerUp = love.audio.newSource("sons/Powerup18.wav", "static")
+sonExplo = love.audio.newSource("sons/Explo1.wav", "static")
 
 game.myBalle = {}
 game.myRaquette = {} 
@@ -23,6 +26,7 @@ game.listCoeur = {}
 
 game.myRaquette = game.mySpriteManager:CreateSprite("Raquette", "Raquette", 300, 500)
 game.BonusActif = false
+ 
 
 game.collisionRaquette = {}
 game.collisionRaquette.x = 0
@@ -151,6 +155,9 @@ function game:Update(dt)
             if probaBonus >= 15 then 
               self.myBonusManager:CreateBonus("Bonus","Bonus"..tostring(nbBonus), b.posX, b.posY + 10, math.random(1, 12))
             end
+
+            game.myExploManager:CreateExplo("Explo", "Explo", self.collisionBrique.x, self.collisionBrique.y - 10)
+            sonExplo:play()
           end
           
           myGameState.myBalle.vy = 0 -myGameState.myBalle.vy
@@ -358,6 +365,7 @@ end
   self.myWallManager:Update(dt)
   self.myBonusManager:Update(dt)
   self.myBalleManager:Update(dt)
+  self.myExploManager:Update(dt)
 
   if self.BonusActif == true then
      self.timeBonus = math.abs(self.timeBonus + dt)

@@ -17,7 +17,8 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
   sprite.images = {} 
   sprite.delete = false
   
-   if pType == "Coeur" then 
+   
+  if pType == "Coeur" then 
     sprite.scaleX = 0.3
     sprite.scaleY = 0.3
     sprite.images[1] = love.graphics.newImage("graphiques/Star/Coeur.png")
@@ -66,13 +67,34 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
   
   function sprite:anime()
     
-    self.frames = #self.images 
-    if self.currentImage  < self.frames then 
+    if self.type == "Explo" then
+
+      self.frames = #self.images 
+
+      if self.currentImage  < self.frames then 
+          self.currentImage = self.currentImage + 0.10
+      print ("aniExplo")
+      print(self.currentImage)
+      else 
+        self.currentImage = 1
+        self.delete = true
+      end
+
+    else
+
+      self.frames = #self.images 
+
+      if self.currentImage  < self.frames then 
       self.currentImage = self.currentImage + 0.15
       
-    else 
-      self.currentImage = 1
+      else 
+       self.currentImage = 1
+      end
+
     end
+
+
+    
 
   end
 

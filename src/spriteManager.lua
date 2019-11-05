@@ -17,17 +17,7 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
   sprite.images = {} 
   sprite.delete = false
   
-   
-  if pType == "Coeur" then 
-    sprite.scaleX = 0.3
-    sprite.scaleY = 0.3
-    sprite.images[1] = love.graphics.newImage("graphiques/Star/Coeur.png")
-    sprite.largeur = sprite.images[1]:getWidth() * sprite.scaleX
-    sprite.hauteur = sprite.images[1]:getHeight() * sprite.scaleY
-    sprite.oX = 0
-    sprite.oY = 0
-
-  elseif pType == "Raquette" then
+  if pType == "Raquette" then
 
     sprite.scaleX = 0.2
     sprite.scaleY = 0.2
@@ -79,7 +69,7 @@ function spriteManager:CreateSprite(pType, pName, pX, pY)
         self.currentImage = 1
         self.delete = true
       end
-
+      
     else
 
       self.frames = #self.images 

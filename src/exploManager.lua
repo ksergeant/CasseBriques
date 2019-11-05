@@ -13,6 +13,7 @@ function exploManager:CreateExplo(pType, pName, pX, pY)
   explo.scaleY = 0.4
   explo.isAnimed = true
   explo.images = {}
+
   explo.images[1] = love.graphics.newImage("graphiques/Explo/Explo1.png")
   explo.images[2] = love.graphics.newImage("graphiques/Explo/Explo2.png")
   explo.images[3] = love.graphics.newImage("graphiques/Explo/Explo3.png")
@@ -22,6 +23,7 @@ function exploManager:CreateExplo(pType, pName, pX, pY)
   explo.images[7] = love.graphics.newImage("graphiques/Explo/Explo7.png")
   explo.images[8] = love.graphics.newImage("graphiques/Explo/Explo8.png")
   explo.images[9] = love.graphics.newImage("graphiques/Explo/Explo9.png")
+
   explo.oX = explo.images[1]:getWidth()/2
   explo.oY = explo.images[1]:getHeight()/2
   

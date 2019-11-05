@@ -23,6 +23,7 @@ function bonusManager:CreateBonus(pType, pName, pX, pY, pId)
   bonus.images[10] = love.graphics.newImage("graphiques/Power/ShortRaquet.png")
   bonus.images[11] = love.graphics.newImage("graphiques/Power/Slow.png")
   bonus.images[12] = love.graphics.newImage("graphiques/Power/TirRaquet.png")
+  bonus.images[13] = love.graphics.newImage("graphiques/Power/Coeur.png")
  
   bonus.scaleX = 0.18
   bonus.scaleY = 0.18
@@ -31,6 +32,15 @@ function bonusManager:CreateBonus(pType, pName, pX, pY, pId)
   bonus.hauteur = bonus.images[1]:getHeight() * bonus.scaleY 
   bonus.oX = bonus.images[1]:getWidth()/2
   bonus.oY = bonus.images[1]:getHeight()/2
+
+ if pId == 13 then
+  bonus.scaleX = 0.25
+  bonus.scaleY = 0.25
+  bonus.largeur = bonus.images[13]:getWidth() * bonus.scaleX 
+  bonus.hauteur = bonus.images[13]:getHeight() * bonus.scaleY 
+  bonus.oX = bonus.images[13]:getWidth()/2
+  bonus.oY = bonus.images[13]:getHeight()/2
+ end
 
   table.insert(bonusManager.list_bonus, bonus)
   

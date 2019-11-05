@@ -1,49 +1,25 @@
 local vieManager = {}
 local spriteManager = require("spriteManager")
+local gameState = require ("gameState")
 
-vieManager.list_vie = {}
+vieManager.list_vies = {}
 
-function vieManager:CreateVie(pType, pName, pTableauImages, pNombreFrames, pCouleur)
+function vieManager:CreateVie(pType, pName, pX, pY)
   
-  local vie = spriteManager:CreateSprite("vie", pName, pTableauImages, pNombreFrames)
- 
-  vie.posX = 0
-  vie.posY = 0
-  vie.isBroken = false
-  vie.durability = 0
-  
+  local vie = spriteManager:CreateSprite("Coeur", pName, pX, pY)
+
   vie.images = {}
-  vie.imagesBroken = {}
-  vie.images[1] = "graphiques/Brick/Brick1.png"
-  vie.images[2] = "graphiques/Brick/Brick2.png"
-  vie.images[3] = "graphiques/Brick/Brick3.png"
-  vie.images[4] = "graphiques/Brick/Brick4.png"
-  vie.images[5] = "graphiques/Brick/Brick5.png"
-  vie.images[6] = "graphiques/Brick/Brick6.png"
-  vie.images[7] = "graphiques/Brick/Brick7.png"
-  vie.images[8] = "graphiques/Brick/Brick8.png"
-  vie.images[9] = "graphiques/Brick/Brick9.png"
-  vie.images[10] = "graphiques/Brick/Brick10.png"
-  
-  vie.imagesBroken[1] = "graphiques/Brick/Brick1Broken.png"
-  vie.imagesBroken[2] = "graphiques/Brick/Brick2Broken.png"
-  vie.imagesBroken[3] = "graphiques/Brick/Brick3Broken.png"
-  vie.imagesBroken[4] = "graphiques/Brick/Brick4Broken.png"
-  vie.imagesBroken[5] = "graphiques/Brick/Brick5Broken.png"
-  vie.imagesBroken[6] = "graphiques/Brick/Brick6Broken.png"
-  vie.imagesBroken[7] = "graphiques/Brick/Brick7Broken.png"
-  vie.imagesBroken[8] = "graphiques/Brick/Brick8Broken.png"
-  vie.imagesBroken[9] = "graphiques/Brick/Brick9Broken.png"
-  vie.imagesBroken[10] = "graphiques/Brick/Brick10Broken.png"
-
-  if (pType == "Classique") then
-    vie.durability = 1
-
-  end
-  vie.largeur = vie.images[1]:getWidth()
-  vie.hauteur = vie.images[1]:getHeight()
-
-  table.insert(vieManager.list_sprites, vie)
+  vie.scaleX = 0.2
+  vie.scaleY = 0.2
+  vie.images[1] = love.graphics.newImage("graphiques/Star/Coeur.png")
+  vie.largeur = vie.images[1]:getWidth() * vie.scaleX
+  vie.hauteur = vie.images[1]:getHeight() * vie.scaleY
+  vie.oX = 0
+  vie.oY = 0
+  vie.isAnimed = true
+  vie.max = 8
+  vie.timer = 0
+  table.insert(vieManager.list_vies, vie)
   
   print("vie Create")
 
@@ -51,28 +27,62 @@ function vieManager:CreateVie(pType, pName, pTableauImages, pNombreFrames, pCoul
   
 end
 
+function vieManager:Init()
 
+  local decal = 0
+    for i = 1, gameState.vies do 
+        self:CreateVie("Coeur", "Coeur"..tostring(i), 10 + decal,540)
+        decal = decal + 50
+        
+    end
+
+end
+
+function vieManager:Anime()
+  if #vieManager.list_vies~=nil then
+
+    local vPos = #vieManager.list_vies
+    local v = vieManager.list_vies[vPos]
+    local timer = 15
+    
+    if v.timer < timer then
+
+      v.scaleX = v.scaleX + 0.0003
+      v.scaleY = v.scaleY + 0.0003
+      v.timer = v.timer + 0.10
+
+    
+
+    else
+
+      v.timer = 0
+      v.scaleX = 0.2
+      v.scaleY = 0.2
+    end
+
+
+  end
+end
 
 function vieManager:Update(dt)
   
-    if #vieManager.list_sprites~=nil then
+    if #vieManager.list_vies~=nil then
       
-      for i = 1, #vieManager.list_sprites do
-      
-        local s = vieManager.list_sprites[i]
+      for i = #vieManager.list_vies, 1, -1 do
         
-        if s.delete == true then
+        local v = vieManager.list_vies[i]
+        
+        if v.delete == true then
 
-          table.remove(vieManager.list_sprites, i)
+          table.remove(vieManager.list_vies, i)
 
         end 
 
-        if s.isAnimed == true then
-            s:anime()
+        if v.isAnimed == true then
+            vieManager:Anime()
         end
 
-        
-        
+              
       end
       
     end

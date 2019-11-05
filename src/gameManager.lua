@@ -8,6 +8,7 @@ game.myWallManager = require("wallManager")
 game.myBonusManager = require("bonusManager")
 game.myBalleManager = require("balleManager")
 game.myExploManager = require("exploManager")
+game.myVieManager = require("vieManager")
 
 game.background = love.graphics.newImage("graphiques/Background/Background1.png")
 
@@ -27,7 +28,6 @@ game.listCoeur = {}
 game.myRaquette = game.mySpriteManager:CreateSprite("Raquette", "Raquette", 300, 500)
 game.BonusActif = false
  
-
 game.collisionRaquette = {}
 game.collisionRaquette.x = 0
 game.collisionRaquette.y = 0
@@ -42,8 +42,6 @@ game.timeBonus = 0
 function math.angle(x1,y1, x2,y2)
   return math.atan2(y2-y1, x2-x1)
 end
-
-
 
 function collideBonus(a1, a2)
   local x1,y1,x2,y2
@@ -93,18 +91,20 @@ function collideRaquette(a1, a2)
          y2 < y1+a1.hauteur
 end
 
-
 function game:Load()
 
 myGameState.myBalle.colle = true
+self.myVieManager:Init()
+--[[
 local decal = 0
-    for i = 1, myGameState.vies do
-        
+    for i = 1, myGameState.vies do       
         local CoeurTempo = {}
         CoeurTempo = self.mySpriteManager:CreateSprite("Coeur", "Coeur"..tostring(i), 10 + decal, 560)
-        table.insert( self.listCoeur, CoeurTempo)
+        table.insert(self.listCoeur, CoeurTempo)
         decal = decal + 50
     end
+]]--
+
 
     -- Crée les Briques du niveau
     local decalBriqueY = 28
@@ -151,12 +151,16 @@ function game:Update(dt)
 
             b.delete = true
             myGameState.score = myGameState.score + 100
-            local probaBonus = math.random( 1,20)
+            local probaBonus = math.random(1,20)
+            
             if probaBonus >= 15 then 
-              self.myBonusManager:CreateBonus("Bonus","Bonus"..tostring(nbBonus), b.posX, b.posY + 10, math.random(1, 12))
+              --local idBonus = math.random(1,13)
+              local idBonus = 13
+            
+              self.myBonusManager:CreateBonus("Bonus","Bonus"..tostring(nbBonus), b.posX, b.posY + 10, idBonus)
             end
 
-            game.myExploManager:CreateExplo("Explo", "Explo", self.collisionBrique.x, self.collisionBrique.y - 10)
+            game.myExploManager:CreateExplo("Explo", "Explo", b.posX - b.largeur/2 +10, b.posY+8)
             sonExplo:play()
           end
           
@@ -168,7 +172,6 @@ function game:Update(dt)
         end
       end
     end
-
 
     if #self.myWallManager.list_walls~=0 then
       
@@ -188,9 +191,7 @@ function game:Update(dt)
         end
       end
     end
-
-
-     
+ 
     if #self.myBonusManager.list_bonus~=0 then
 
       for i = #self.myBonusManager.list_bonus, 1, -1 do
@@ -219,7 +220,9 @@ function game:Update(dt)
             elseif bo.currentImage == 11 then
               self.BonusActif = true
               self.timeBonus = 0
-              myGameState.myBalle.vitesse = 0.7  
+              myGameState.myBalle.vitesse = 0.7 
+            elseif bo.currentImage == 13 then 
+              myGameState.vies = myGameState.vies + 1
             end
 
           end
@@ -227,9 +230,6 @@ function game:Update(dt)
       end
 
     end
-
-    
-
 
 -- si la souris sort de l'écran elle est replacée
   if love.mouse.getX() >= myGameState.largeur -50 then
@@ -268,10 +268,10 @@ if myGameState.myBalle.posX + myGameState.myBalle.largeur/2 > myGameState.largeu
     sonPerteBalle:play()
     myGameState.vies = myGameState.vies - 1
 
-    if #self.listCoeur ~=0 then
-        local i = #self.listCoeur 
-        self.listCoeur[i].delete = true
-        table.remove( self.listCoeur, i )
+    if #self.myVieManager.list_vies ~=0 then
+        local i = #self.myVieManager.list_vies 
+        self.myVieManager.list_vies[i].delete = true
+        table.remove( self.myVieManager.list_vies, i )
     end
 
     myGameState.myBalle.colle = true
@@ -366,6 +366,7 @@ end
   self.myBonusManager:Update(dt)
   self.myBalleManager:Update(dt)
   self.myExploManager:Update(dt)
+  self.myVieManager:Update(dt)
 
   if self.BonusActif == true then
      self.timeBonus = math.abs(self.timeBonus + dt)
@@ -392,9 +393,9 @@ function game:Draw()
    if myGameState.Debug == true then
 
     love.graphics.print("Nombre de vies "..myGameState.vies
-    .." listeCoeur "..#self.listCoeur
+    .." listeVies "..#self.myVieManager.list_vies
     .." listeSprite "..#self.mySpriteManager.list_sprites 
-    .." listreBrique "..#self.myBriqueManager.list_briques
+    .." listeBrique "..#self.myBriqueManager.list_briques
     --.." PourcentageCollisionRaquette "..math.floor(self.collisionRaquette.pourcentFinal)
     .." Desti "..myGameState.myBalle.destinationX, 0, 0)
     love.graphics.print("Bonus     "..tostring(self.BonusActif), 850, 490)
@@ -408,12 +409,10 @@ function game:Draw()
     
     end
 
-    
     love.graphics.print("Niveau      "..myGameState.niveauActuel, 810, 520)
     love.graphics.print("Score                   "..myGameState.score, 765, 550)
     love.graphics.print("Meilleur                           "..myGameState.meilleurScore, 720, 580)
     
 end
-
 
 return game

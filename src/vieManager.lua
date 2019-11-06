@@ -1,16 +1,23 @@
 local vieManager = {}
 local spriteManager = require("spriteManager")
 local gameState = require ("gameState")
+local decal = 0
 
 vieManager.list_vies = {}
 
 function vieManager:CreateVie(pType, pName, pX, pY)
   
+  pX = pX + decal
+
   local vie = spriteManager:CreateSprite("Coeur", pName, pX, pY)
 
   vie.images = {}
-  vie.scaleX = 0.2
-  vie.scaleY = 0.2
+  vie.scaleX = 0.23
+  vie.scaleY = 0.23
+  vie.scaleXRef = 0.23
+  vie.scaleYRef = 0.23
+  vie.grossissement = false
+  vie.retrecissement = true
   vie.images[1] = love.graphics.newImage("graphiques/Star/Coeur.png")
   vie.largeur = vie.images[1]:getWidth() * vie.scaleX
   vie.hauteur = vie.images[1]:getHeight() * vie.scaleY
@@ -21,6 +28,7 @@ function vieManager:CreateVie(pType, pName, pX, pY)
   vie.timer = 0
   table.insert(vieManager.list_vies, vie)
   
+  decal = decal + 50
   print("vie Create")
 
   return vie
@@ -29,13 +37,34 @@ end
 
 function vieManager:Init()
 
-  local decal = 0
     for i = 1, gameState.vies do 
-        self:CreateVie("Coeur", "Coeur"..tostring(i), 10 + decal,540)
-        decal = decal + 50
+        self:CreateVie("Coeur", "Coeur"..tostring(i), 10 ,540)
         
     end
 
+end
+
+function vieManager:Delete()
+
+  if #self.list_vies ~=0 then
+    local i = #self.list_vies 
+    self.list_vies[i].delete = true
+    table.remove( self.list_vies, i)
+    decal = decal - 50
+  end
+
+end
+
+function vieManager:AddVieBonus()
+  if gameState.vies < gameState.viesMax then
+
+    gameState.vies = gameState.vies + 1
+    local posV = #self.list_vies
+    self.list_vies[posV].scaleX = self.list_vies[posV].scaleXRef
+    self.list_vies[posV].scaleY = self.list_vies[posV].scaleYRef
+    self:CreateVie("Coeur", "Coeur"..tostring(gameState.vies), 10, 540)
+
+  end
 end
 
 function vieManager:Anime()
@@ -43,23 +72,35 @@ function vieManager:Anime()
 
     local vPos = #vieManager.list_vies
     local v = vieManager.list_vies[vPos]
-    local timer = 15
-    
-    if v.timer < timer then
+    local timer = 20
+
+    -- Grossisement
+    if v.timer < timer and v.grossissement == false then
 
       v.scaleX = v.scaleX + 0.0003
       v.scaleY = v.scaleY + 0.0003
-      v.timer = v.timer + 0.10
+      v.timer = v.timer + 0.09
 
-    
-
-    else
-
+     -- v.timer = 0
+   --   v.scaleX = 0.2
+    --  v.scaleY = 0.2
+  
+    else 
+      v.grossissement = true
       v.timer = 0
-      v.scaleX = 0.2
-      v.scaleY = 0.2
+     
     end
 
+    -- Retrecissement
+    if v.scaleXRef < v.scaleX  and v.grossissement == true then
+
+      v.scaleX = v.scaleX - 0.0003
+      v.scaleY = v.scaleY - 0.0003
+      v.timer = v.timer + 0.09
+    else
+      v.grossissement = false
+      
+    end
 
   end
 end

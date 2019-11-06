@@ -95,16 +95,6 @@ function game:Load()
 
 myGameState.myBalle.colle = true
 self.myVieManager:Init()
---[[
-local decal = 0
-    for i = 1, myGameState.vies do       
-        local CoeurTempo = {}
-        CoeurTempo = self.mySpriteManager:CreateSprite("Coeur", "Coeur"..tostring(i), 10 + decal, 560)
-        table.insert(self.listCoeur, CoeurTempo)
-        decal = decal + 50
-    end
-]]--
-
 
     -- Crée les Briques du niveau
     local decalBriqueY = 28
@@ -222,7 +212,18 @@ function game:Update(dt)
               self.timeBonus = 0
               myGameState.myBalle.vitesse = 0.7 
             elseif bo.currentImage == 13 then 
-              myGameState.vies = myGameState.vies + 1
+              self.myVieManager:AddVieBonus()
+              --[[
+              if myGameState.vies < myGameState.viesMax then
+
+                myGameState.vies = myGameState.vies + 1
+                local posV = #self.myVieManager.list_vies
+                self.myVieManager.list_vies[posV].scaleX = self.myVieManager.list_vies[posV].scaleXRef
+                self.myVieManager.list_vies[posV].scaleY = self.myVieManager.list_vies[posV].scaleYRef
+                self.myVieManager:CreateVie("Coeur", "Coeur"..tostring(myGameState.vies), 10, 540)
+
+              end
+]]--
             end
 
           end
@@ -267,13 +268,14 @@ if myGameState.myBalle.posX + myGameState.myBalle.largeur/2 > myGameState.largeu
     -- on perd une balle
     sonPerteBalle:play()
     myGameState.vies = myGameState.vies - 1
-
+    self.myVieManager:Delete()
+--[[
     if #self.myVieManager.list_vies ~=0 then
         local i = #self.myVieManager.list_vies 
         self.myVieManager.list_vies[i].delete = true
         table.remove( self.myVieManager.list_vies, i )
     end
-
+]]--
     myGameState.myBalle.colle = true
   end
 

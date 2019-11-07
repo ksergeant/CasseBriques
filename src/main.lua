@@ -4,15 +4,17 @@ io.stdout:setvbuf('no')
 -- Cette ligne permet de déboguer pas à pas dans ZeroBraneStudio
 if arg[#arg] == "-debug" then require("mobdebug").start() end
 
--- variable GAME
+-- variables
 local myGame = require("gameManager") 
 myGameState = require("gameState")
+myMenuManager = require("menuManager")
+
 -- Fonction LOAD de Love2D
 function love.load()
 
- myGame:Load()
-  bgm = love.audio.newSource("musiques/through_space.ogg", "stream")
   love.mouse.setVisible(false) -- cache la souris
+  myGame:Load()
+  bgm = love.audio.newSource("musiques/through_space.ogg", "stream")
   love.mouse.setPosition(myGameState.largeur/2, myGameState.hauteur/2)
  
 end
@@ -20,21 +22,40 @@ end
 -- Fonction UPDATE de Love2D
 function love.update(dt)
 
-  myGame:Update(dt)
-  love.audio.play(bgm)
+  if myGameState.ecranCourant == "Titre" then
+    myMenuManager:EcranTitreUpdate(dt)
+
+  elseif myGameState.ecranCourant == "Jeu" then
+    myGame:Update(dt)
+    love.audio.play(bgm)
+
+  elseif myGameState.ecranCourant == "Gameover" then
+    myMenuManager:EcranGameoverUpdate(dt)
+  end
+  
  
 end
 
 -- Fonction DRAW de Love2D
 function love.draw(dt)
+  if myGameState.ecranCourant == "Titre" then
+    myMenuManager:EcranTitreDraw()
 
-  myGame:Draw(dt)
-  
+  elseif myGameState.ecranCourant == "Jeu" then
+    myGame:Draw(dt)
+
+  elseif myGameState.ecranCourant == "Gameover" then
+    myMenuManager:EcranGameoverDraw()
+  end
 end
 
 -- Fonction qui se lance lorsque la souris est préssée
 function love.mousepressed(x,y,n)
-  
+
+  if myGameState.ecranCourant == "Titre" then
+    myGameState.ecranCourant = "Jeu"
+  elseif myGameState.ecranCourant == "Jeu" then
+    
     if myGameState.myBalle.colle == true then
       myGameState.myBalle.colle = false
       myGameState.myBalle.vx = 300
@@ -42,22 +63,35 @@ function love.mousepressed(x,y,n)
       myGameState.myBalle.destinationX = math.random(0, myGameState.largeur)
       myGameState.myBalle.destinationY = 0
     end
+
+  elseif myGameState.ecranCourant == "Gameover" then
+
+  end
   
 end
   
 -- Fonction qui se lance lorsque une touche est préssée
 function love.keypressed(key)
-
-  if key == "escape" then 
-    love.event.quit()
-  end
   
-  if key == "d" and myGameState.Debug == false then
-    myGameState.Debug = true
-    
-  elseif key == "d" and myGameState.Debug == true then
-    myGameState.Debug = false
-    
+  if myGameState.ecranCourant == "Titre" then
+    if key == "escape" then 
+      love.event.quit()
+    end
+  elseif myGameState.ecranCourant == "Jeu" then
+    if key == "escape" then 
+      myGameState.ecranCourant = "Titre"
+    end
+
+    if key == "d" and myGameState.Debug == false then
+      myGameState.Debug = true
+      
+    elseif key == "d" and myGameState.Debug == true then
+      myGameState.Debug = false
+      
+    end
+
+  elseif myGameState.ecranCourant == "Gameover" then
+
   end
- 
+
 end

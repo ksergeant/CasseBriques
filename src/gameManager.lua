@@ -10,7 +10,7 @@ game.myBalleManager = require("balleManager")
 game.myExploManager = require("exploManager")
 game.myVieManager = require("vieManager")
 
-game.background = love.graphics.newImage("graphiques/Background/Background1.png")
+game.background = love.graphics.newImage("graphiques/Background/BackgroundJeu.png")
 
 sonPerteBalle = love.audio.newSource("sons/sfx_deathscream_human2.wav", "static")
 sonCollisonBrique = love.audio.newSource("sons/sfx_sounds_impact5.wav", "static")
@@ -18,12 +18,9 @@ sonCollisonRaquette = love.audio.newSource("sons/DM-CGS-07.wav", "static")
 sonPowerUp = love.audio.newSource("sons/Powerup18.wav", "static")
 sonExplo = love.audio.newSource("sons/Explo1.wav", "static")
 
-game.myBalle = {}
 game.myRaquette = {} 
 
 myGameState.myBalle = game.myBalleManager:CreateBall("Balle", "Balle", 335, 440)
-
-game.listCoeur = {}
 
 game.myRaquette = game.mySpriteManager:CreateSprite("Raquette", "Raquette", 300, 500)
 game.BonusActif = false
@@ -96,6 +93,7 @@ function game:Load()
 myGameState.myBalle.colle = true
 self.myVieManager:Init()
 
+
     -- Crée les Briques du niveau
     local decalBriqueY = 28
     local nbBrique = 0
@@ -117,6 +115,8 @@ self.myVieManager:Init()
 end
 
 function game:Update(dt)
+
+  love.graphics.setNewFont(12) 
 
   local nbBonus = #self.myBonusManager.list_bonus
     self.myRaquette.posX = love.mouse.getX()
@@ -213,17 +213,7 @@ function game:Update(dt)
               myGameState.myBalle.vitesse = 0.7 
             elseif bo.currentImage == 13 then 
               self.myVieManager:AddVieBonus()
-              --[[
-              if myGameState.vies < myGameState.viesMax then
-
-                myGameState.vies = myGameState.vies + 1
-                local posV = #self.myVieManager.list_vies
-                self.myVieManager.list_vies[posV].scaleX = self.myVieManager.list_vies[posV].scaleXRef
-                self.myVieManager.list_vies[posV].scaleY = self.myVieManager.list_vies[posV].scaleYRef
-                self.myVieManager:CreateVie("Coeur", "Coeur"..tostring(myGameState.vies), 10, 540)
-
-              end
-]]--
+     
             end
 
           end
@@ -267,7 +257,6 @@ if myGameState.myBalle.posX + myGameState.myBalle.largeur/2 > myGameState.largeu
   if myGameState.myBalle.posY + myGameState.myBalle.hauteur/2> myGameState.hauteur then 
     -- on perd une balle
     sonPerteBalle:play()
-    myGameState.vies = myGameState.vies - 1
     self.myVieManager:Delete()
 --[[
     if #self.myVieManager.list_vies ~=0 then

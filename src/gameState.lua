@@ -9,5 +9,6 @@ gameState.meilleurScore = 1000
 gameState.largeur = love.graphics.getWidth()
 gameState.hauteur = love.graphics.getHeight()
 gameState.myBalle = {}
+gameState.ecranCourant = "Titre"
 
 return gameState

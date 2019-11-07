@@ -9,7 +9,7 @@ function vieManager:CreateVie(pType, pName, pX, pY)
   
   pX = pX + decal
 
-  local vie = spriteManager:CreateSprite("Coeur", pName, pX, pY)
+  local vie = spriteManager:CreateSprite(pType, pName, pX, pY)
 
   vie.images = {}
   vie.scaleX = 0.23
@@ -46,6 +46,7 @@ end
 
 function vieManager:Delete()
 
+  gameState.vies = gameState.vies - 1
   if #self.list_vies ~=0 then
     local i = #self.list_vies 
     self.list_vies[i].delete = true

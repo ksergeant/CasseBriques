@@ -116,8 +116,6 @@ end
 
 function game:Update(dt)
 
-  love.graphics.setNewFont(12) 
-
   local nbBonus = #self.myBonusManager.list_bonus
     self.myRaquette.posX = love.mouse.getX()
 

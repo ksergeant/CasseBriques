@@ -16,7 +16,9 @@ function love.load()
   myGame:Load()
   bgm = love.audio.newSource("musiques/through_space.ogg", "stream")
   love.mouse.setPosition(myGameState.largeur/2, myGameState.hauteur/2)
- 
+  myMenuManager:EcranTitreLoad()
+   
+
 end
 
 -- Fonction UPDATE de Love2D
@@ -38,11 +40,14 @@ end
 
 -- Fonction DRAW de Love2D
 function love.draw(dt)
+  
   if myGameState.ecranCourant == "Titre" then
     myMenuManager:EcranTitreDraw()
-
+    love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 800, 0)
   elseif myGameState.ecranCourant == "Jeu" then
     myGame:Draw(dt)
+    love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 800, 0)
+
 
   elseif myGameState.ecranCourant == "Gameover" then
     myMenuManager:EcranGameoverDraw()
@@ -52,8 +57,8 @@ end
 -- Fonction qui se lance lorsque la souris est préssée
 function love.mousepressed(x,y,n)
 
-  if myGameState.ecranCourant == "Titre" then
-    myGameState.ecranCourant = "Jeu"
+  if myGameState.ecranCourant == "Titre"  then
+   -- myGameState.ecranCourant = "Jeu"
   elseif myGameState.ecranCourant == "Jeu" then
     
     if myGameState.myBalle.colle == true then
@@ -74,9 +79,25 @@ end
 function love.keypressed(key)
   
   if myGameState.ecranCourant == "Titre" then
+
+    if key == "space" and myMenuManager.myCursor.pos == 1 then
+       myGameState.ecranCourant = "Jeu"
+    elseif key == "space" and myMenuManager.myCursor.pos == 2 then
+
+    elseif key == "space" and myMenuManager.myCursor.pos == 3  then 
+      love.event.quit()
+    end 
+
+    if key == "up" then
+      myMenuManager.myCursor.pos = myMenuManager.myCursor.pos -1
+    elseif key == "down" then
+      myMenuManager.myCursor.pos = myMenuManager.myCursor.pos +1
+    end
+
     if key == "escape" then 
       love.event.quit()
     end
+
   elseif myGameState.ecranCourant == "Jeu" then
     if key == "escape" then 
       myGameState.ecranCourant = "Titre"

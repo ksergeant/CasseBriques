@@ -15,6 +15,7 @@ function love.load()
   love.mouse.setVisible(false) -- cache la souris
   myGame:Load()
   bgm = love.audio.newSource("musiques/through_space.ogg", "stream")
+  musiqueMenu = love.audio.newSource("musiques/CyberpunkMoonlightSonata.mp3", "stream")
   love.mouse.setPosition(myGameState.largeur/2, myGameState.hauteur/2)
   myMenuManager:EcranTitreLoad()
    
@@ -27,8 +28,10 @@ function love.update(dt)
   if myGameState.ecranCourant == "Titre" then
     myMenuManager:EcranTitreUpdate(dt)
     love.audio.stop(bgm)
+    love.audio.play(musiqueMenu)
   elseif myGameState.ecranCourant == "Jeu" then
     myGame:Update(dt)
+    love.audio.stop(musiqueMenu)
     love.audio.play(bgm)
 
   elseif myGameState.ecranCourant == "Gameover" then

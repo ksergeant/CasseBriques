@@ -16,7 +16,7 @@ sonPerteBalle = love.audio.newSource("sons/sfx_deathscream_human2.wav", "static"
 sonCollisonBrique = love.audio.newSource("sons/sfx_sounds_impact5.wav", "static")
 sonCollisonRaquette = love.audio.newSource("sons/DM-CGS-07.wav", "static")
 sonPowerUp = love.audio.newSource("sons/Powerup18.wav", "static")
-sonExplo = love.audio.newSource("sons/Explo1.wav", "static")
+sonExplo = love.audio.newSource("sons/Explo2.wav", "static")
 
 game.myRaquette = {} 
 
@@ -142,13 +142,13 @@ function game:Update(dt)
             local probaBonus = math.random(1,20)
             
             if probaBonus >= 15 then 
-              --local idBonus = math.random(1,13)
-              local idBonus = 13
+              local idBonus = math.random(1,13)
+              --local idBonus = 13
             
               self.myBonusManager:CreateBonus("Bonus","Bonus"..tostring(nbBonus), b.posX, b.posY + 10, idBonus)
             end
 
-            game.myExploManager:CreateExplo("Explo", "Explo", b.posX - b.largeur/2 +10, b.posY+8)
+            self.myExploManager:CreateExplo("Explo", "Explo", b.posX - b.largeur/2 +10, b.posY+8)
             sonExplo:play()
           end
           

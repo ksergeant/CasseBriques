@@ -26,7 +26,7 @@ function love.update(dt)
 
   if myGameState.ecranCourant == "Titre" then
     myMenuManager:EcranTitreUpdate(dt)
-
+    love.audio.stop(bgm)
   elseif myGameState.ecranCourant == "Jeu" then
     myGame:Update(dt)
     love.audio.play(bgm)
@@ -43,10 +43,10 @@ function love.draw(dt)
   
   if myGameState.ecranCourant == "Titre" then
     myMenuManager:EcranTitreDraw()
-    love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 800, 0)
+    love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 900, 0)
   elseif myGameState.ecranCourant == "Jeu" then
     myGame:Draw(dt)
-    love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 800, 0)
+    love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 900, 0)
 
 
   elseif myGameState.ecranCourant == "Gameover" then

@@ -16,9 +16,10 @@ function menuManager:EcranTitreLoad()
     self.myCursor.scaleY = 0.3
     self.myCursor.pos = 1
     
+    font = love.graphics.setNewFont("graphiques/Gui/KenPixelNova.ttf", 20)
     fontClassique = love.graphics.getFont()
-    fontMenuTitre = love.graphics.setNewFont(40) 
-    fontLabelMenu  = love.graphics.setNewFont(20)
+    fontMenuTitre = love.graphics.setNewFont("graphiques/Gui/KenPixelNova.ttf",70) 
+    fontLabelMenu  = love.graphics.setNewFont("graphiques/Gui/KenPixelNova.ttf",30)
      
  end
 
@@ -55,13 +56,33 @@ function menuManager:EcranTitreDraw()
     love.graphics.draw(c.image, c.x, c.y, 0, c.scaleX, c.scaleY)
 
     love.graphics.setFont(fontMenuTitre)
-    love.graphics.print("SPACE BRICK", 365, 85)
+    love.graphics.print("SPACE BRICK", 365, 90)
     
-    love.graphics.setColor(0.8, 0, 0) -- Rouge
-    love.graphics.setFont(fontLabelMenu)
-    love.graphics.print("Nouvelle Partie", 420, 210)
-    love.graphics.print("Charger Partie", 422, 310)
-    love.graphics.print("Quitter", 460, 410)
+   love.graphics.setFont(fontLabelMenu)
+
+    if self.myCursor.pos == 1 then
+        love.graphics.setColor(0.8, 0, 0)
+        love.graphics.print("Nouvelle Partie", 420, 210)
+    else 
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.print("Nouvelle Partie", 420, 210)
+    end
+
+    if self.myCursor.pos == 2 then
+        love.graphics.setColor(0.8, 0, 0)
+        love.graphics.print("Charger Partie", 422, 310)
+    else 
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.print("Charger Partie", 422, 310)
+    end
+
+    if self.myCursor.pos == 3 then
+        love.graphics.setColor(0.8, 0, 0)
+        love.graphics.print("Quitter", 460, 410)
+    else
+        love.graphics.setColor(0, 0, 0) 
+        love.graphics.print("Quitter", 460, 410)
+    end
 
     love.graphics.setColor(0, 0, 0) 
     love.graphics.print("Appuyez sur Espace pour continuer", 320, 500)

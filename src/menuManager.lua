@@ -2,6 +2,7 @@ local menuManager = {}
 local gameState = require("gameState")
 
 -- Ecran titre
+
 function menuManager:EcranTitreLoad()
     self.backgroundMenuTitre = love.graphics.newImage("graphiques/Background/BackgroundMenu.png")
     self.myButton1 = love.graphics.newImage("graphiques/Gui/grey_button00.png")
@@ -20,11 +21,17 @@ function menuManager:EcranTitreLoad()
     fontClassique = love.graphics.getFont()
     fontMenuTitre = love.graphics.setNewFont("graphiques/Gui/KenPixelNova.ttf",70) 
     fontLabelMenu  = love.graphics.setNewFont("graphiques/Gui/KenPixelNova.ttf",30)
-     
+    fontLabelAppuyez = love.graphics.setNewFont("graphiques/Gui/KenPixelNova.ttf",40)
+
+    -- Variables pour l'animation du texte
+    alpha = 0.5
+    alphaRef = 0.5
+    disparu = true
  end
 
-function menuManager:EcranTitreUpdate(dt)
+ function menuManager:EcranTitreCursor()
 
+    -- gestion de la position du curseur
     if self.myCursor.pos < 1 then
         self.myCursor.pos = 1
     end
@@ -41,6 +48,35 @@ function menuManager:EcranTitreUpdate(dt)
             self.myCursor.y = 400
     end
 
+ end
+ 
+ function menuManager:EcranTitreAnimationTexte(dt)
+
+    -- animation du texte 
+    if alpha < 1 and disparu == true then
+        alpha = alpha + alpha * dt 
+        print (alpha)
+        print ("superieur")
+    else
+        disparu = false
+    end
+
+    if alphaRef < alpha and disparu == false  then
+        alpha = alpha - alpha * dt 
+        print (alpha)
+        print ("inferieur")
+    else 
+        disparu = true
+    end
+
+ end
+ 
+
+function menuManager:EcranTitreUpdate(dt)
+
+    self:EcranTitreCursor()
+    self:EcranTitreAnimationTexte(dt)
+    
 end
 
 function menuManager:EcranTitreDraw()
@@ -84,8 +120,9 @@ function menuManager:EcranTitreDraw()
         love.graphics.print("Quitter", 460, 410)
     end
 
-    love.graphics.setColor(0, 0, 0) 
-    love.graphics.print("Appuyez sur Espace pour continuer", 320, 500)
+    love.graphics.setFont(fontLabelAppuyez)
+    love.graphics.setColor(0.2, 0.6, 1, alpha) 
+    love.graphics.print("Appuyez sur Espace pour continuer", 280, 500)
 
     love.graphics.setFont(fontMenuTitre)
     love.graphics.setColor(0.8, 0, 0) -- Rouge

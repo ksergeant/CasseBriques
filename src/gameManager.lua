@@ -149,7 +149,7 @@ function game:Update(dt)
             end
 
             self.myExploManager:CreateExplo("Explo", "Explo", b.posX - b.largeur/2 +10, b.posY+8)
-            sonExplo:play()
+            --sonExplo:play()
           end
           
           myGameState.myBalle.vy = 0 -myGameState.myBalle.vy
@@ -256,13 +256,7 @@ if myGameState.myBalle.posX + myGameState.myBalle.largeur/2 > myGameState.largeu
     -- on perd une balle
     sonPerteBalle:play()
     self.myVieManager:Delete()
---[[
-    if #self.myVieManager.list_vies ~=0 then
-        local i = #self.myVieManager.list_vies 
-        self.myVieManager.list_vies[i].delete = true
-        table.remove( self.myVieManager.list_vies, i )
-    end
-]]--
+
     myGameState.myBalle.colle = true
   end
 

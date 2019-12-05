@@ -8,6 +8,7 @@ if arg[#arg] == "-debug" then require("mobdebug").start() end
 local myGame = require("gameManager") 
 myGameState = require("gameState")
 myMenuManager = require("menuManager")
+myParticuleManager = require("particuleManager")
 
 -- Fonction LOAD de Love2D
 function love.load()
@@ -19,7 +20,6 @@ function love.load()
   love.mouse.setPosition(myGameState.largeur/2, myGameState.hauteur/2)
   myMenuManager:EcranTitreLoad()
    
-
 end
 
 -- Fonction UPDATE de Love2D
@@ -27,6 +27,7 @@ function love.update(dt)
 
   if myGameState.ecranCourant == "Titre" then
     myMenuManager:EcranTitreUpdate(dt)
+    myParticuleManager:Update(dt)
     love.audio.stop(bgm)
     love.audio.play(musiqueMenu)
   elseif myGameState.ecranCourant == "Jeu" then
@@ -46,6 +47,7 @@ function love.draw(dt)
   
   if myGameState.ecranCourant == "Titre" then
     myMenuManager:EcranTitreDraw()
+    myParticuleManager:Draw()
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 900, 0)
   elseif myGameState.ecranCourant == "Jeu" then
     myGame:Draw(dt)

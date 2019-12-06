@@ -2,6 +2,8 @@ local menuManager = {}
 local gameState = require("gameState")
 local tweening = require("tweening")
 
+menuManager.list_Menu = {}
+
 -- Ecran titre
 function menuManager:EcranTitreLoad()
     tweening:EnterMenu()

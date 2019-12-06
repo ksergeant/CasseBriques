@@ -9,7 +9,8 @@ local myGame = require("gameManager")
 myGameState = require("gameState")
 myMenuManager = require("menuManager")
 myParticuleManager = require("particuleManager")
-
+myPartieManager = require("partieManager")
+text = ""
 -- Fonction LOAD de Love2D
 function love.load()
 
@@ -30,6 +31,15 @@ function love.update(dt)
     myParticuleManager:Update(dt)
     love.audio.stop(bgm)
     love.audio.play(musiqueMenu)
+  
+
+  elseif myGameState.ecranCourant =="Nouvelle" then
+    myPartieManager:NouvelleUpdate(dt)
+    
+  elseif myGameState.ecranCourant =="Charger" then
+
+    myPartieManager:ChargerUpdate(dt)
+
   elseif myGameState.ecranCourant == "Jeu" then
     myGame:Update(dt)
     love.audio.stop(musiqueMenu)
@@ -49,6 +59,14 @@ function love.draw(dt)
     myMenuManager:EcranTitreDraw()
     myParticuleManager:Draw()
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 900, 0)
+  
+  elseif myGameState.ecranCourant == "Nouvelle" then
+   
+   myPartieManager:NouvelleDraw()
+   love.graphics.printf(text, 200, 0, love.graphics.getWidth())
+  elseif myGameState.ecranCourant == "Charger" then
+    myPartieManager:ChargerDraw()
+
   elseif myGameState.ecranCourant == "Jeu" then
     myGame:Draw(dt)
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 900, 0)
@@ -83,12 +101,14 @@ end
 -- Fonction qui se lance lorsque une touche est préssée
 function love.keypressed(key)
   
+  
+  -- Menu General
   if myGameState.ecranCourant == "Titre" then
 
     if key == "space" and myMenuManager.myCursor.pos == 1 then
-       myGameState.ecranCourant = "Jeu"
+       myGameState.ecranCourant = "Nouvelle"
     elseif key == "space" and myMenuManager.myCursor.pos == 2 then
-
+      myGameState.ecranCourant = "Charger"
     elseif key == "space" and myMenuManager.myCursor.pos == 3  then 
       love.event.quit()
     end 
@@ -103,6 +123,25 @@ function love.keypressed(key)
       love.event.quit()
     end
 
+    -- Menu Nouvelle Partie
+  elseif myGameState.ecranCourant == "Nouvelle" then
+    
+    if key == "return" then
+      myPartieManager:CreatePartie(text)
+      text = ""
+      myGameState.ecranCourant = "Jeu"
+    end
+
+    --Menu Charger Partie
+  elseif myGameState.ecranCourant == "Charger" then
+    
+    if key == "return" then
+     
+    elseif key == "escape" then
+      myGameState.ecranCourant = "Titre"
+    end
+  
+    -- Mode Jeu
   elseif myGameState.ecranCourant == "Jeu" then
     if key == "escape" then 
       myGameState.ecranCourant = "Titre"
@@ -119,5 +158,12 @@ function love.keypressed(key)
   elseif myGameState.ecranCourant == "Gameover" then
 
   end
+
+end
+
+
+function love.textinput(t)
+  
+  text = tostring(text) ..tostring(t)
 
 end

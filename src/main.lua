@@ -81,7 +81,7 @@ end
 function love.mousepressed(x,y,n)
 
   if myGameState.ecranCourant == "Titre"  then
-   -- myGameState.ecranCourant = "Jeu"
+  
   elseif myGameState.ecranCourant == "Jeu" then
     
     if myGameState.myBalle.colle == true then

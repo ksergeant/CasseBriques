@@ -13,11 +13,12 @@ function menuManager:EcranTitreLoad()
     self.myButton3 = love.graphics.newImage("graphiques/Gui/grey_button00.png")
 
     self.myCursor = {}
-    self.myCursor.image = love.graphics.newImage("graphiques/Star/Etoile.png")
+   -- self.myCursor.image = love.graphics.newImage("graphiques/Star/Etoile.png")
+    self.myCursor.image = love.graphics.newImage("graphiques/Star/star.png")
     self.myCursor.x = 330
     self.myCursor.y = 200
-    self.myCursor.scaleX = 0.3
-    self.myCursor.scaleY = 0.3
+    self.myCursor.scaleX = 1
+    self.myCursor.scaleY = 1
 
     self.myCursor.largeur = self.myCursor.image:getWidth() * self.myCursor.scaleX 
     self.myCursor.hauteur = self.myCursor.image:getHeight() * self.myCursor.scaleY

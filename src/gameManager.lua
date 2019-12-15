@@ -112,6 +112,12 @@ self.myVieManager:Init()
   --  game.myWallManager:CreateWall("Wall", "Wall3", 600, 250, 3)
   --  game.myWallManager:CreateWall("Wall", "Wall4", 800, 250, 4)
     
+  local fileSave = io.open("Save.txt","a")
+  fileSave:write("Vies : "..tostring(myGameState.vies).."\n")
+  fileSave:write("Niveau : "..tostring(myGameState.niveauActuel).."\n")
+  fileSave:write("Score : "..tostring(myGameState.score).."\n")
+  io.close(fileSave)
+
 end
 
 function game:Update(dt)

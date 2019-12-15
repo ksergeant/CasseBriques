@@ -6,11 +6,9 @@ function partieManager:CreatePartie(pName)
     local partie = {}
     partie.name = pName
 
-    local nombrePartie = #self.list_parties
-    if nombrePartie == nil then
-        nombrePartie = 1
-    end 
-    table.insert(self.list_parties, nombrePartie, partie)
+    
+    
+    table.insert(self.list_parties, partie)
 
     print("Partie Create")
 end
@@ -27,16 +25,7 @@ end
 
 function partieManager:ChargerUpdate(dt)
 
-    if #partieManager.list_parties~=nil then
-      
-        for i = #partieManager.list_parties, 1, -1 do
-        
-          local p = partieManager.list_parties[i]
-          
-  
-        end
-        
-      end
+    
 
 end
 
@@ -44,6 +33,7 @@ function partieManager:ChargerDraw()
 
     local decal = 0
     love.graphics.print("Liste de parties ", 450 , 10)
+
     if #partieManager.list_parties~=nil then
       
         for i = #partieManager.list_parties, 1, -1 do
